@@ -1,0 +1,3 @@
+packages:
+  - 'apps/*'      # Your actual applications (Web, Mobile, API)
+  - 'packages/*'  # Shared code (Database, Types, UI)

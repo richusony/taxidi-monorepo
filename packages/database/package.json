@@ -1,0 +1,32 @@
+{
+  "name": "@taxidi/database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "devDependencies": {
+    "@taxidi/tsconfig": "workspace:*",
+    "@types/node": "^25.2.3",
+    "prisma": "^7.4.0",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "argon2": "^0.44.0",
+    "dotenv": "^17.3.1",
+    "tsx": "^4.21.0"
+  }
+}
