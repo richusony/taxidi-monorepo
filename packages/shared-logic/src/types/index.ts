@@ -3,5 +3,3 @@ export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   PARTNER = 'PARTNER',
 }
-
-

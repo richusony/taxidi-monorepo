@@ -1,17 +1,17 @@
-import dayjs from "dayjs";
-import argon2 from "argon2";
-import { prisma } from "@/lib/prisma";
-import { Request, Response } from "express";
-import { signInSchema, signUpSchema } from "@taxidi/shared-logic";
+import dayjs from 'dayjs';
+import argon2 from 'argon2';
+import { prisma } from '@/lib/prisma';
+import { Request, Response } from 'express';
+import { signInSchema, signUpSchema } from '@taxidi/shared-logic';
 import {
   generateAccessToken,
   generateRefreshToken,
   hashToken,
-} from "@/utils/token-helper";
+} from '@/utils/token-helper';
 
 export class AuthController {
   testController(req: Request, res: Response) {
-    return res.status(200).json({ message: 'it worked'});
+    return res.status(200).json({ message: 'it worked' });
   }
 
   async signUpWithEmailAndPassword(req: Request, res: Response) {
@@ -34,18 +34,18 @@ export class AuthController {
           firstname,
           lastname,
           password: hashedPassword,
-          role: { set: ["CUSTOMER"] },
+          role: { set: ['CUSTOMER'] },
           phone,
         },
       });
 
       return res.status(200).json({
-        message: "User created successfully",
+        message: 'User created successfully',
         user: { id: newUser.id, email: newUser.email },
       });
     } catch (error) {
       return res.status(500).json({
-        error: "Internal server error",
+        error: 'Internal server error',
       });
     }
   }
@@ -68,7 +68,7 @@ export class AuthController {
 
       if (!userExists) {
         return res.status(403).json({
-          error: "Invalid credentials",
+          error: 'Invalid credentials',
         });
       }
 
@@ -79,7 +79,7 @@ export class AuthController {
 
       if (!passwordVerified) {
         return res.status(403).json({
-          error: "Invalid credentials",
+          error: 'Invalid credentials',
         });
       }
 
@@ -102,33 +102,33 @@ export class AuthController {
         data: {
           tokenHash: hashToken(refreshToken),
           userId: userExists.id,
-          expiresAt: dayjs().add(7, "day").toDate(),
+          expiresAt: dayjs().add(7, 'day').toDate(),
         },
       });
 
-      const authMode = req.headers["x-auth-mode"];
+      const authMode = req.headers['x-auth-mode'];
 
-      if (authMode === "cookie") {
-        res.cookie("refreshToken", refreshToken, {
+      if (authMode === 'cookie') {
+        res.cookie('refreshToken', refreshToken, {
           httpOnly: true,
           secure: true,
-          sameSite: "strict",
+          sameSite: 'strict',
         });
 
         return res.status(200).json({
-          message: "User logged in",
+          message: 'User logged in',
           accessToken,
         });
       }
 
       return res.status(200).json({
-        message: "User logged in",
+        message: 'User logged in',
         accessToken,
         refreshToken,
       });
     } catch (error) {
       return res.status(500).json({
-        error: "Internal server error",
+        error: 'Internal server error',
       });
     }
   }
@@ -139,7 +139,7 @@ export class AuthController {
 
       if (!refreshToken) {
         return res.status(401).json({
-          error: "Missing refresh token",
+          error: 'Missing refresh token',
         });
       }
 
@@ -151,7 +151,7 @@ export class AuthController {
 
       if (!storedToken) {
         return res.status(403).json({
-          error: "Invalid refresh token",
+          error: 'Invalid refresh token',
         });
       }
 
@@ -163,13 +163,13 @@ export class AuthController {
         });
 
         return res.status(403).json({
-          error: "Refresh token reuse detected",
+          error: 'Refresh token reuse detected',
         });
       }
 
       if (dayjs().isAfter(storedToken.expiresAt)) {
         return res.status(403).json({
-          error: "Refresh token expired",
+          error: 'Refresh token expired',
         });
       }
 
@@ -179,7 +179,7 @@ export class AuthController {
 
       if (!user) {
         return res.status(403).json({
-          error: "User not found",
+          error: 'User not found',
         });
       }
       // 🔥 ROTATION
@@ -196,17 +196,17 @@ export class AuthController {
         data: {
           tokenHash: hashToken(newRefreshToken),
           userId: user.id,
-          expiresAt: dayjs().add(7, "day").toDate(),
+          expiresAt: dayjs().add(7, 'day').toDate(),
         },
       });
 
-      const authMode = req.headers["x-auth-mode"];
+      const authMode = req.headers['x-auth-mode'];
 
-      if (authMode === "cookie") {
-        res.cookie("refreshToken", newRefreshToken, {
+      if (authMode === 'cookie') {
+        res.cookie('refreshToken', newRefreshToken, {
           httpOnly: true,
           secure: true,
-          sameSite: "strict",
+          sameSite: 'strict',
         });
 
         return res.json({
@@ -220,7 +220,7 @@ export class AuthController {
       });
     } catch (error) {
       return res.status(500).json({
-        error: "Internal server error",
+        error: 'Internal server error',
       });
     }
   }

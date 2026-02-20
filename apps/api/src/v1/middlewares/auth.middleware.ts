@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { accessTokenVerfier } from "@/utils/token-helper";
+import { Request, Response, NextFunction } from 'express';
+import { accessTokenVerfier } from '@/utils/token-helper';
 
 export interface JwtPayload {
   userId: string;
@@ -16,14 +16,13 @@ export function authMiddleware(
   next: NextFunction,
 ) {
   const authHeader = req.headers.authorization;
-  const token =
-    authHeader?.startsWith("Bearer ")
-      ? authHeader.split(" ")[1]
-      : req.cookies?.accessToken;
+  const token = authHeader?.startsWith('Bearer ')
+    ? authHeader.split(' ')[1]
+    : req.cookies?.accessToken;
 
   if (!token) {
     return res.status(401).json({
-      error: "Missing access token",
+      error: 'Missing access token',
     });
   }
 
@@ -32,7 +31,7 @@ export function authMiddleware(
 
     if (!validated) {
       return res.status(401).json({
-        error: "Invalid or expired access token",
+        error: 'Invalid or expired access token',
       });
     }
 
@@ -41,7 +40,7 @@ export function authMiddleware(
     next();
   } catch (error) {
     return res.status(401).json({
-      error: "Invalid or expired access token",
+      error: 'Invalid or expired access token',
     });
   }
 }

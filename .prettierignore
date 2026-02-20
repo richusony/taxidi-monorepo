@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.next
+coverage
+pnpm-lock.yaml
+.env*
+
+# Prisma generated client
+packages/database/src/generated
