@@ -4,6 +4,7 @@ build
 .next
 coverage
 pnpm-lock.yaml
+package-lock.json
 .env*
 
 # Prisma generated client
