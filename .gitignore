@@ -6,6 +6,7 @@ dist
 build
 .next
 coverage
+packages/database/src/generated
 
 # Turbo
 .turbo
