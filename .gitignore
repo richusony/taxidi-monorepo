@@ -1,8 +1,16 @@
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 build
 .next
 coverage
 
+# Turbo
 .turbo
+
+# Environment
 .env
+.env.local
+.env.*.local
