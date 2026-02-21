@@ -2,28 +2,28 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { BsTwitterX } from 'react-icons/bs';
 import { IoMdArrowForward } from 'react-icons/io';
-import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import { InputError } from './InputErrorMessage';
 import { api } from 'src/lib/axios.config';
+import { SignUpInput } from '@taxidi/shared-logic';
+import { signUpClientSchema } from 'src/lib/auth.schema';
+import Link from 'next/link';
+import { BsTwitterX } from 'react-icons/bs';
+import { FaFacebook, FaGoogle } from 'react-icons/fa';
 
 const inputBase =
   'outline-none rounded-xl border px-4 py-3 transition focus:ring-2 focus:ring-black/10';
 
-interface FormErrors {
-  firstname?: string;
-  lastname?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-}
+type SignUpForm = SignUpInput & {
+  confirmPassword: string;
+};
+
+type FormErrors = Partial<Record<keyof SignUpForm, string>>;
 
 export function SignUpSection() {
   const router = useRouter();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<SignUpForm>({
     firstname: '',
     lastname: '',
     email: '',
@@ -35,30 +35,27 @@ export function SignUpSection() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
   const validateClient = (): FormErrors => {
-    const newError: FormErrors = {};
+    const result = signUpClientSchema.safeParse(form);
 
-    if (!form.firstname.trim()) newError.firstname = 'First name is required';
+    if (result.success) return {};
 
-    if (!form.lastname.trim()) newError.lastname = 'Last name is required';
+    const formattedErrors: FormErrors = {};
 
-    if (!form.email.trim()) newError.email = 'Email is required';
+    result.error.issues.forEach((err) => {
+      const field = err.path[0] as keyof SignUpForm;
+      formattedErrors[field] = err.message;
+    });
 
-    if (!form.password) newError.password = 'Password is required';
-
-    if (form.password.length < 6)
-      newError.password = 'Password must be at least 6 characters';
-
-    if (form.password !== form.confirmPassword)
-      newError.confirmPassword = 'Passwords do not match';
-
-    return newError;
+    return formattedErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,14 +88,14 @@ export function SignUpSection() {
 
         Object.keys(response.errors).forEach((key) => {
           if (response.errors[key]?.length > 0) {
-            formattedErrors[key as keyof FormErrors] = response.errors[key][0];
+            formattedErrors[key as keyof SignUpForm] = response.errors[key][0];
           }
         });
 
         setError(formattedErrors);
       } else {
         setError({
-          email: response?.message || 'Signup failed',
+          email: response?.error || 'Signup failed',
         });
       }
     } finally {
@@ -108,9 +105,7 @@ export function SignUpSection() {
 
   const renderError = (message?: string) => (
     <div className="min-h-2.5">
-      {typeof message === 'string' && message.length > 0 && (
-        <InputError errMessage={message} />
-      )}
+      {message && <InputError errMessage={message} />}
     </div>
   );
 
@@ -129,6 +124,7 @@ export function SignUpSection() {
               name="firstname"
               value={form.firstname}
               onChange={handleChange}
+              autoComplete="name"
               className={`${inputBase} ${
                 error.firstname ? 'border-red-500' : 'border-gray-200'
               }`}
@@ -142,6 +138,7 @@ export function SignUpSection() {
               name="lastname"
               value={form.lastname}
               onChange={handleChange}
+              autoComplete="name"
               className={`${inputBase} ${
                 error.lastname ? 'border-red-500' : 'border-gray-200'
               }`}
@@ -156,6 +153,7 @@ export function SignUpSection() {
             type="email"
             name="email"
             value={form.email}
+            autoComplete="email"
             onChange={handleChange}
             className={`${inputBase} ${
               error.email ? 'border-red-500' : 'border-gray-200'
@@ -171,6 +169,7 @@ export function SignUpSection() {
             name="password"
             value={form.password}
             onChange={handleChange}
+            autoComplete="new-password"
             className={`${inputBase} ${
               error.password ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -187,6 +186,7 @@ export function SignUpSection() {
             name="confirmPassword"
             value={form.confirmPassword}
             onChange={handleChange}
+            autoComplete="new-password"
             className={`${inputBase} ${
               error.confirmPassword ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -206,6 +206,35 @@ export function SignUpSection() {
           {!loading && <IoMdArrowForward className="text-xl" />}
         </button>
       </form>
+
+      <section className="mt-10 flex justify-center gap-x-10 items-center">
+        <div
+          onClick={() => {
+            window.location.href = 'http://localhost:8080/api/v1/auth/google';
+          }}
+          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer"
+        >
+          <FaGoogle />
+        </div>
+        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
+          <FaFacebook />
+        </div>
+        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
+          <BsTwitterX />
+        </div>
+      </section>
+
+      <section className="mt-5 mb-4 text-center">
+        <p className="text-gray-500/80 font-semibold">
+          Already have an account?{' '}
+          <Link
+            href="/signin"
+            className="font-bold text-gray-600 hover:underline"
+          >
+            Sign In
+          </Link>
+        </p>
+      </section>
     </section>
   );
 }

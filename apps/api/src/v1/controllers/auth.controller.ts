@@ -27,8 +27,10 @@ export class AuthController {
     const { email, firstname, password, phone, lastname } = validation.data;
 
     try {
-      const hashedPassword = await argon2.hash(password);
+      const userExists = await prisma.users.findUnique({ where: { email } });
+      if (userExists) return res.status(400).json({ error: "Account with this email already exist" });
 
+      const hashedPassword = await argon2.hash(password);
       const newUser = await prisma.users.create({
         data: {
           email,

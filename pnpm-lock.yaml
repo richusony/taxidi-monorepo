@@ -154,6 +154,9 @@ importers:
       '@taxidi/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@taxidi/shared-logic':
+        specifier: workspace:*
+        version: link:../../packages/shared-logic
       next:
         specifier: 16.1.6
         version: 16.1.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -166,6 +169,9 @@ importers:
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.2.3)
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
       zustand:
         specifier: ^5.0.11
         version: 5.0.11(@types/react@19.2.14)(react@19.2.3)
@@ -315,9 +321,6 @@ importers:
 
   packages/shared-logic:
     dependencies:
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -325,9 +328,6 @@ importers:
       '@taxidi/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@types/node':
-        specifier: ^25.3.0
-        version: 25.3.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
@@ -1300,9 +1300,6 @@ packages:
 
   '@types/node@25.2.3':
     resolution: {integrity: sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ==}
-
-  '@types/node@25.3.0':
-    resolution: {integrity: sha512-4K3bqJpXpqfg2XKGK9bpDTc6xO/xoUP/RBWS7AtRMug6zZFaRekiLzjVtAoZMquxoAbzBvy5nxQ7veS5eYzf8A==}
 
   '@types/oauth@0.9.6':
     resolution: {integrity: sha512-H9TRCVKBNOhZZmyHLqFt9drPM9l+ShWiqqJijU1B8P3DX3ub84NjxDuy+Hjrz+fEca5Kwip3qPMKNyiLgNJtIA==}
@@ -2907,9 +2904,6 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
-
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
@@ -3828,10 +3822,6 @@ snapshots:
   '@types/node@25.2.3':
     dependencies:
       undici-types: 7.16.0
-
-  '@types/node@25.3.0':
-    dependencies:
-      undici-types: 7.18.2
 
   '@types/oauth@0.9.6':
     dependencies:
@@ -5496,8 +5486,6 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici-types@7.16.0: {}
-
-  undici-types@7.18.2: {}
 
   unpipe@1.0.0: {}
 
