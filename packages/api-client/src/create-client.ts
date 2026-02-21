@@ -1,4 +1,4 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 export const createApiClient = (config?: {
   baseURL?: string;
@@ -14,9 +14,9 @@ export const createApiClient = (config?: {
   api.interceptors.request.use((req: InternalAxiosRequestConfig) => {
     const token = config?.getAccessToken?.();
 
-      if(config?.authMode) {
-        req.headers.set('x-auth-mode', config.authMode); 
-      }
+    if (config?.authMode) {
+      req.headers.set('x-auth-mode', config.authMode);
+    }
 
     if (token) {
       req.headers.Authorization = `Bearer ${token}`;
@@ -33,7 +33,7 @@ export const createApiClient = (config?: {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 
   return api;

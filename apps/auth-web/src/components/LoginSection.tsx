@@ -1,22 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { BsTwitterX } from "react-icons/bs";
-import { IoMdArrowForward } from "react-icons/io";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { useState } from 'react';
+import Link from 'next/link';
+import { BsTwitterX } from 'react-icons/bs';
+import { IoMdArrowForward } from 'react-icons/io';
+import { FaFacebook, FaGoogle } from 'react-icons/fa';
 
-import { api } from "src/lib/axios.config";
-import { useAuthStore } from "src/store/auth.store";
-import { ROLE_REDIRECT } from "src/config/role-redirect";
+import { api } from 'src/lib/axios.config';
+import { useAuthStore } from 'src/store/auth.store';
+import { ROLE_REDIRECT } from 'src/config/role-redirect';
 
 export function LoginSection() {
-  const router = useRouter();
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +24,7 @@ export function LoginSection() {
     setError(null);
 
     try {
-      const { data } = await api.post("/auth/signin", {
+      const { data } = await api.post('/auth/signin', {
         email,
         password,
       });
@@ -38,7 +36,7 @@ export function LoginSection() {
       window.location.href = ROLE_REDIRECT[data.role];
     } catch (err: any) {
       setError(
-        err.response?.data?.message || "Something went wrong. Try again."
+        err.response?.data?.message || 'Something went wrong. Try again.',
       );
     } finally {
       setLoading(false);
@@ -95,7 +93,7 @@ export function LoginSection() {
             className="transition-all duration-150 ease-linear shadow-md rounded-2xl w-full p-4 bg-black hover:bg-black/82 hover:-translate-y-1 font-bold text-white flex items-center justify-center gap-x-1 disabled:opacity-60"
             type="submit"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? 'Logging in...' : 'Login'}
             {!loading && <IoMdArrowForward className="text-xl" />}
           </button>
         </div>
@@ -111,7 +109,12 @@ export function LoginSection() {
       </div>
 
       <section className="flex justify-center gap-x-10 items-center">
-        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
+        <div
+          onClick={() => {
+            window.location.href = 'http://localhost:8080/api/v1/auth/google';
+          }}
+          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer"
+        >
           <FaGoogle />
         </div>
         <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
@@ -124,7 +127,7 @@ export function LoginSection() {
 
       <section className="mt-5 text-center">
         <p className="text-gray-500/80 font-semibold">
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <Link
             href="/signup"
             className="font-bold text-gray-600 hover:underline"

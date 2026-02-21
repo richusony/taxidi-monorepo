@@ -6,12 +6,8 @@ export interface JwtPayload {
   role: string;
 }
 
-export interface AuthenticatedRequest extends Request {
-  user?: JwtPayload;
-}
-
 export function authMiddleware(
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {

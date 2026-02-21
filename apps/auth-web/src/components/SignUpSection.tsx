@@ -44,17 +44,13 @@ export function SignUpSection() {
   const validateClient = (): FormErrors => {
     const newError: FormErrors = {};
 
-    if (!form.firstname.trim())
-      newError.firstname = 'First name is required';
+    if (!form.firstname.trim()) newError.firstname = 'First name is required';
 
-    if (!form.lastname.trim())
-      newError.lastname = 'Last name is required';
+    if (!form.lastname.trim()) newError.lastname = 'Last name is required';
 
-    if (!form.email.trim())
-      newError.email = 'Email is required';
+    if (!form.email.trim()) newError.email = 'Email is required';
 
-    if (!form.password)
-      newError.password = 'Password is required';
+    if (!form.password) newError.password = 'Password is required';
 
     if (form.password.length < 6)
       newError.password = 'Password must be at least 6 characters';
@@ -95,8 +91,7 @@ export function SignUpSection() {
 
         Object.keys(response.errors).forEach((key) => {
           if (response.errors[key]?.length > 0) {
-            formattedErrors[key as keyof FormErrors] =
-              response.errors[key][0];
+            formattedErrors[key as keyof FormErrors] = response.errors[key][0];
           }
         });
 
@@ -121,9 +116,7 @@ export function SignUpSection() {
 
   return (
     <section className="w-full lg:w-1/2 px-5 md:px-10 lg:px-12 h-svh overflow-y-auto">
-      <h1 className="mt-10 text-4xl font-extrabold text-black">
-        Sign Up
-      </h1>
+      <h1 className="mt-10 text-4xl font-extrabold text-black">Sign Up</h1>
       <p className="mt-2 lg:text-lg font-semibold text-gray-500/80">
         Start a new journey by creating an account
       </p>
@@ -131,9 +124,7 @@ export function SignUpSection() {
       <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
         <div className="lg:flex lg:gap-x-2">
           <div className="flex flex-col gap-y-2 w-full">
-            <label className="font-semibold text-gray-500">
-              First Name
-            </label>
+            <label className="font-semibold text-gray-500">First Name</label>
             <input
               name="firstname"
               value={form.firstname}
@@ -146,9 +137,7 @@ export function SignUpSection() {
           </div>
 
           <div className="flex flex-col gap-y-2 w-full">
-            <label className="font-semibold text-gray-500">
-              Last Name
-            </label>
+            <label className="font-semibold text-gray-500">Last Name</label>
             <input
               name="lastname"
               value={form.lastname}
@@ -162,9 +151,7 @@ export function SignUpSection() {
         </div>
 
         <div className="flex flex-col gap-y-2">
-          <label className="font-semibold text-gray-500">
-            Email Address
-          </label>
+          <label className="font-semibold text-gray-500">Email Address</label>
           <input
             type="email"
             name="email"
@@ -178,9 +165,7 @@ export function SignUpSection() {
         </div>
 
         <div className="flex flex-col gap-y-2">
-          <label className="font-semibold text-gray-500">
-            Password
-          </label>
+          <label className="font-semibold text-gray-500">Password</label>
           <input
             type="password"
             name="password"
@@ -203,9 +188,7 @@ export function SignUpSection() {
             value={form.confirmPassword}
             onChange={handleChange}
             className={`${inputBase} ${
-              error.confirmPassword
-                ? 'border-red-500'
-                : 'border-gray-200'
+              error.confirmPassword ? 'border-red-500' : 'border-gray-200'
             }`}
           />
           {renderError(error.confirmPassword)}
