@@ -1,46 +1,143 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BsTwitterX } from 'react-icons/bs';
 import { IoMdArrowForward } from 'react-icons/io';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import { InputError } from './InputErrorMessage';
+import { api } from 'src/lib/axios.config';
 
 const inputBase =
   'outline-none rounded-xl border px-4 py-3 transition focus:ring-2 focus:ring-black/10';
 
+interface FormErrors {
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
 export function SignUpSection() {
-  const error = {
+  const router = useRouter();
+
+  const [form, setForm] = useState({
     firstname: '',
     lastname: '',
     email: '',
     password: '',
     confirmPassword: '',
+  });
+
+  const [error, setError] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const validateClient = (): FormErrors => {
+    const newError: FormErrors = {};
+
+    if (!form.firstname.trim())
+      newError.firstname = 'First name is required';
+
+    if (!form.lastname.trim())
+      newError.lastname = 'Last name is required';
+
+    if (!form.email.trim())
+      newError.email = 'Email is required';
+
+    if (!form.password)
+      newError.password = 'Password is required';
+
+    if (form.password.length < 6)
+      newError.password = 'Password must be at least 6 characters';
+
+    if (form.password !== form.confirmPassword)
+      newError.confirmPassword = 'Passwords do not match';
+
+    return newError;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const clientErrors = validateClient();
+
+    if (Object.keys(clientErrors).length > 0) {
+      setError(clientErrors);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError({});
+
+      await api.post('/auth/signup', {
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+      });
+
+      router.push('/?signup=success');
+    } catch (err: any) {
+      const response = err.response?.data;
+
+      if (response?.errors) {
+        const formattedErrors: FormErrors = {};
+
+        Object.keys(response.errors).forEach((key) => {
+          if (response.errors[key]?.length > 0) {
+            formattedErrors[key as keyof FormErrors] =
+              response.errors[key][0];
+          }
+        });
+
+        setError(formattedErrors);
+      } else {
+        setError({
+          email: response?.message || 'Signup failed',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderError = (message?: string) => (
     <div className="min-h-2.5">
-      {message && <InputError errMessage={message} />}
+      {typeof message === 'string' && message.length > 0 && (
+        <InputError errMessage={message} />
+      )}
     </div>
   );
 
   return (
     <section className="w-full lg:w-1/2 px-5 md:px-10 lg:px-12 h-svh overflow-y-auto">
-      <h1 className="mt-10 text-4xl font-extrabold text-black">Sign Up</h1>
+      <h1 className="mt-10 text-4xl font-extrabold text-black">
+        Sign Up
+      </h1>
       <p className="mt-2 lg:text-lg font-semibold text-gray-500/80">
         Start a new journey by creating an account
       </p>
 
-      <form className="mt-5 space-y-4">
-        {/* Name */}
+      <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
         <div className="lg:flex lg:gap-x-2">
-          {/* First Name */}
           <div className="flex flex-col gap-y-2 w-full">
-            <label htmlFor="firstname" className="font-semibold text-gray-500">
+            <label className="font-semibold text-gray-500">
               First Name
             </label>
             <input
-              id="firstname"
               name="firstname"
-              placeholder="John"
+              value={form.firstname}
+              onChange={handleChange}
               className={`${inputBase} ${
                 error.firstname ? 'border-red-500' : 'border-gray-200'
               }`}
@@ -48,15 +145,14 @@ export function SignUpSection() {
             {renderError(error.firstname)}
           </div>
 
-          {/* Last Name */}
           <div className="flex flex-col gap-y-2 w-full">
-            <label htmlFor="lastname" className="font-semibold text-gray-500">
+            <label className="font-semibold text-gray-500">
               Last Name
             </label>
             <input
-              id="lastname"
               name="lastname"
-              placeholder="Snow"
+              value={form.lastname}
+              onChange={handleChange}
               className={`${inputBase} ${
                 error.lastname ? 'border-red-500' : 'border-gray-200'
               }`}
@@ -65,17 +161,15 @@ export function SignUpSection() {
           </div>
         </div>
 
-        {/* Email */}
         <div className="flex flex-col gap-y-2">
-          <label htmlFor="email" className="font-semibold text-gray-500">
+          <label className="font-semibold text-gray-500">
             Email Address
           </label>
           <input
-            id="email"
-            name="email"
             type="email"
-            required
-            placeholder="name@example.com"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
             className={`${inputBase} ${
               error.email ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -83,16 +177,15 @@ export function SignUpSection() {
           {renderError(error.email)}
         </div>
 
-        {/* Password */}
         <div className="flex flex-col gap-y-2">
-          <label htmlFor="password" className="font-semibold text-gray-500">
+          <label className="font-semibold text-gray-500">
             Password
           </label>
           <input
-            id="password"
-            name="password"
             type="password"
-            placeholder="********"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
             className={`${inputBase} ${
               error.password ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -100,79 +193,36 @@ export function SignUpSection() {
           {renderError(error.password)}
         </div>
 
-        {/* Confirm Password */}
         <div className="flex flex-col gap-y-2">
-          <label
-            htmlFor="confirmPassword"
-            className="font-semibold text-gray-500"
-          >
+          <label className="font-semibold text-gray-500">
             Confirm Password
           </label>
           <input
-            id="confirmPassword"
-            name="confirmPassword"
             type="password"
-            placeholder="********"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            onChange={handleChange}
             className={`${inputBase} ${
-              error.confirmPassword ? 'border-red-500' : 'border-gray-200'
+              error.confirmPassword
+                ? 'border-red-500'
+                : 'border-gray-200'
             }`}
           />
           {renderError(error.confirmPassword)}
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
+          disabled={loading}
           className="w-full p-4 rounded-2xl bg-black text-white font-bold
             flex items-center justify-center gap-x-2
-            transition hover:bg-black/85 hover:-translate-y-0.5"
+            transition hover:bg-black/85 hover:-translate-y-0.5
+            disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Sign Up <IoMdArrowForward className="text-xl" />
+          {loading ? 'Creating Account...' : 'Sign Up'}
+          {!loading && <IoMdArrowForward className="text-xl" />}
         </button>
       </form>
-
-      {/* Divider */}
-      <div className="my-10 flex items-center gap-x-3">
-        <span className="flex-1 h-px bg-black/15" />
-        <span className="text-sm font-semibold text-gray-500/80">
-          OR CONTINUE WITH
-        </span>
-        <span className="flex-1 h-px bg-black/15" />
-      </div>
-
-      {/* Social Login */}
-      <section className="flex justify-center gap-x-10">
-        {[FaGoogle, FaFacebook, BsTwitterX].map((Icon, i) => (
-          <div
-            key={i}
-            className="p-4 border rounded-md shadow cursor-pointer
-              border-gray-500/30 hover:bg-slate-50"
-          >
-            <Icon />
-          </div>
-        ))}
-      </section>
-
-      {/* Footer */}
-      <section className="mt-6 text-center">
-        <p className="text-gray-500/80 font-semibold">
-          Already have an account?{' '}
-          <Link href="/" className="font-bold text-gray-600 hover:underline">
-            Login
-          </Link>
-        </p>
-
-        <p className="mt-5 mb-2 text-xs text-gray-500/70">
-          BY JOINING, YOU AGREE TO OUR{' '}
-          <span className="font-bold text-gray-600 hover:underline cursor-pointer">
-            TERMS
-          </span>{' '}
-          AND{' '}
-          <span className="font-bold text-gray-600 hover:underline cursor-pointer">
-            PRIVACY
-          </span>
-        </p>
-      </section>
     </section>
   );
 }
