@@ -10,6 +10,7 @@ export function AuthContent() {
           className="h-full w-full object-cover"
           src={bgImage}
           alt="Taxidi Background Image"
+          loading="eager"
         />
         {/* Dark overlay for text */}
         <div className="absolute top-0 right-0 h-screen w-full bg-black/60 "></div>

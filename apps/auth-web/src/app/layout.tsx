@@ -1,5 +1,6 @@
-import type { Metadata } from 'next';
 import './globals.css';
+import type { Metadata } from 'next';
+import { AuthInitializer } from 'src/provider/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'Taxidi Authentication',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthInitializer>{children}</AuthInitializer>
+      </body>
     </html>
   );
 }

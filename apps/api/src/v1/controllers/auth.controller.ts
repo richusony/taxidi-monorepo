@@ -111,13 +111,14 @@ export class AuthController {
       if (authMode === 'cookie') {
         res.cookie('refreshToken', refreshToken, {
           httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
+          secure: process.env.NODE_ENV === "production",
+          sameSite: 'lax',
         });
 
         return res.status(200).json({
           message: 'User logged in',
           accessToken,
+          role: userExists.role[0]
         });
       }
 
@@ -205,12 +206,13 @@ export class AuthController {
       if (authMode === 'cookie') {
         res.cookie('refreshToken', newRefreshToken, {
           httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
+          secure: process.env.NODE_ENV === "production",
+          sameSite: 'lax',
         });
 
         return res.json({
           accessToken: newAccessToken,
+          role: user.role[0]
         });
       }
 
