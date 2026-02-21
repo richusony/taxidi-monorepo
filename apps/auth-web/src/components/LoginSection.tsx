@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { BsTwitterX } from 'react-icons/bs';
 import { IoMdArrowForward } from 'react-icons/io';
-import { FaFacebook, FaGoogle } from 'react-icons/fa';
 
 import { api } from 'src/lib/axios.config';
 import { useAuthStore } from 'src/store/auth.store';
 import { ROLE_REDIRECT } from 'src/config/role-redirect';
+import { FaGoogle } from 'react-icons/fa';
+import { handleGoogleLoginRedirect } from 'src/utils/helper';
 
 export function LoginSection() {
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
@@ -110,18 +110,13 @@ export function LoginSection() {
 
       <section className="flex justify-center gap-x-10 items-center">
         <div
-          onClick={() => {
-            window.location.href = 'http://localhost:8080/api/v1/auth/google';
-          }}
-          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer"
+          onClick={handleGoogleLoginRedirect}
+          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer flex items-center gap-x-2"
         >
-          <FaGoogle />
-        </div>
-        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
-          <FaFacebook />
-        </div>
-        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
-          <BsTwitterX />
+          <FaGoogle />{' '}
+          <span className="text-gray-500 font-semibold">
+            Sign in with Google
+          </span>
         </div>
       </section>
 

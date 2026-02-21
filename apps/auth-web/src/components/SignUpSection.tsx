@@ -8,8 +8,8 @@ import { api } from 'src/lib/axios.config';
 import { SignUpInput } from '@taxidi/shared-logic';
 import { signUpClientSchema } from 'src/lib/auth.schema';
 import Link from 'next/link';
-import { BsTwitterX } from 'react-icons/bs';
-import { FaFacebook, FaGoogle } from 'react-icons/fa';
+import { FaGoogle } from 'react-icons/fa';
+import { handleGoogleLoginRedirect } from 'src/utils/helper';
 
 const inputBase =
   'outline-none rounded-xl border px-4 py-3 transition focus:ring-2 focus:ring-black/10';
@@ -209,28 +209,20 @@ export function SignUpSection() {
 
       <section className="mt-10 flex justify-center gap-x-10 items-center">
         <div
-          onClick={() => {
-            window.location.href = 'http://localhost:8080/api/v1/auth/google';
-          }}
-          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer"
+          onClick={handleGoogleLoginRedirect}
+          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer flex items-center gap-x-2"
         >
-          <FaGoogle />
-        </div>
-        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
-          <FaFacebook />
-        </div>
-        <div className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer">
-          <BsTwitterX />
+          <FaGoogle />{' '}
+          <span className="text-gray-500 font-semibold">
+            Sign up with Google
+          </span>
         </div>
       </section>
 
-      <section className="mt-5 mb-4 text-center">
+      <section className="mt-5 mb-8 text-center">
         <p className="text-gray-500/80 font-semibold">
           Already have an account?{' '}
-          <Link
-            href="/signin"
-            className="font-bold text-gray-600 hover:underline"
-          >
+          <Link href="/" className="font-bold text-gray-600 hover:underline">
             Sign In
           </Link>
         </p>
