@@ -15,16 +15,30 @@ async function main() {
     create: {
       email: 'admin@taxidi.com',
       password: adminHashedPassword,
-      role: ['ADMIN'], 
+      role: ['ADMIN'],
       firstname: 'System',
       lastname: 'Admin',
       phone: '+919947619644',
     },
   });
 
+  const adminGoogleHashedPassword = await argon2.hash('admin123');
+  await prisma.users.upsert({
+    where: { email: 'dev.richusony@gmail.com' },
+    update: {},
+    create: {
+      email: 'dev.richusony@gmail.com',
+      password: adminGoogleHashedPassword,
+      role: ['ADMIN'],
+      firstname: 'Richu',
+      lastname: 'Sony',
+      phone: '+919947619638',
+    },
+  });
+
   const testHashedPassword = await argon2.hash('test123');
   await prisma.users.upsert({
-    where: { email: 'test@gmail.com'},
+    where: { email: 'test@gmail.com' },
     update: {},
     create: {
       email: 'test@gmail.com',
@@ -33,12 +47,12 @@ async function main() {
       role: ['CUSTOMER'],
       password: testHashedPassword,
       phone: '+919947619646',
-    }
+    },
   });
 
   const partnerHashedPassword = await argon2.hash('partner123');
   await prisma.users.upsert({
-    where: { email: 'partner@gmail.com'},
+    where: { email: 'partner@gmail.com' },
     update: {},
     create: {
       email: 'partner@gmail.com',
@@ -47,9 +61,8 @@ async function main() {
       role: ['PARTNER'],
       password: partnerHashedPassword,
       phone: '+919947619647',
-    }
+    },
   });
-
 }
 
 main()

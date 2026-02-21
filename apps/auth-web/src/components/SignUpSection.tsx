@@ -1,19 +1,106 @@
-import Link from 'next/link';
-import { BsTwitterX } from 'react-icons/bs';
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { IoMdArrowForward } from 'react-icons/io';
-import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import { InputError } from './InputErrorMessage';
+import { api } from 'src/lib/axios.config';
+import { SignUpInput } from '@taxidi/shared-logic';
+import { signUpClientSchema } from 'src/lib/auth.schema';
+import Link from 'next/link';
+import { FaGoogle } from 'react-icons/fa';
+import { handleGoogleLoginRedirect } from 'src/utils/helper';
 
 const inputBase =
   'outline-none rounded-xl border px-4 py-3 transition focus:ring-2 focus:ring-black/10';
 
+type SignUpForm = SignUpInput & {
+  confirmPassword: string;
+};
+
+type FormErrors = Partial<Record<keyof SignUpForm, string>>;
+
 export function SignUpSection() {
-  const error = {
+  const router = useRouter();
+
+  const [form, setForm] = useState<SignUpForm>({
     firstname: '',
     lastname: '',
     email: '',
     password: '',
     confirmPassword: '',
+  });
+
+  const [error, setError] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const validateClient = (): FormErrors => {
+    const result = signUpClientSchema.safeParse(form);
+
+    if (result.success) return {};
+
+    const formattedErrors: FormErrors = {};
+
+    result.error.issues.forEach((err) => {
+      const field = err.path[0] as keyof SignUpForm;
+      formattedErrors[field] = err.message;
+    });
+
+    return formattedErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const clientErrors = validateClient();
+
+    if (Object.keys(clientErrors).length > 0) {
+      setError(clientErrors);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError({});
+
+      await api.post('/auth/signup', {
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+      });
+
+      router.push('/?signup=success');
+    } catch (err: any) {
+      const response = err.response?.data;
+
+      if (response?.errors) {
+        const formattedErrors: FormErrors = {};
+
+        Object.keys(response.errors).forEach((key) => {
+          if (response.errors[key]?.length > 0) {
+            formattedErrors[key as keyof SignUpForm] = response.errors[key][0];
+          }
+        });
+
+        setError(formattedErrors);
+      } else {
+        setError({
+          email: response?.error || 'Signup failed',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderError = (message?: string) => (
@@ -29,18 +116,15 @@ export function SignUpSection() {
         Start a new journey by creating an account
       </p>
 
-      <form className="mt-5 space-y-4">
-        {/* Name */}
+      <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
         <div className="lg:flex lg:gap-x-2">
-          {/* First Name */}
           <div className="flex flex-col gap-y-2 w-full">
-            <label htmlFor="firstname" className="font-semibold text-gray-500">
-              First Name
-            </label>
+            <label className="font-semibold text-gray-500">First Name</label>
             <input
-              id="firstname"
               name="firstname"
-              placeholder="John"
+              value={form.firstname}
+              onChange={handleChange}
+              autoComplete="name"
               className={`${inputBase} ${
                 error.firstname ? 'border-red-500' : 'border-gray-200'
               }`}
@@ -48,15 +132,13 @@ export function SignUpSection() {
             {renderError(error.firstname)}
           </div>
 
-          {/* Last Name */}
           <div className="flex flex-col gap-y-2 w-full">
-            <label htmlFor="lastname" className="font-semibold text-gray-500">
-              Last Name
-            </label>
+            <label className="font-semibold text-gray-500">Last Name</label>
             <input
-              id="lastname"
               name="lastname"
-              placeholder="Snow"
+              value={form.lastname}
+              onChange={handleChange}
+              autoComplete="name"
               className={`${inputBase} ${
                 error.lastname ? 'border-red-500' : 'border-gray-200'
               }`}
@@ -65,17 +147,14 @@ export function SignUpSection() {
           </div>
         </div>
 
-        {/* Email */}
         <div className="flex flex-col gap-y-2">
-          <label htmlFor="email" className="font-semibold text-gray-500">
-            Email Address
-          </label>
+          <label className="font-semibold text-gray-500">Email Address</label>
           <input
-            id="email"
-            name="email"
             type="email"
-            required
-            placeholder="name@example.com"
+            name="email"
+            value={form.email}
+            autoComplete="email"
+            onChange={handleChange}
             className={`${inputBase} ${
               error.email ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -83,16 +162,14 @@ export function SignUpSection() {
           {renderError(error.email)}
         </div>
 
-        {/* Password */}
         <div className="flex flex-col gap-y-2">
-          <label htmlFor="password" className="font-semibold text-gray-500">
-            Password
-          </label>
+          <label className="font-semibold text-gray-500">Password</label>
           <input
-            id="password"
-            name="password"
             type="password"
-            placeholder="********"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            autoComplete="new-password"
             className={`${inputBase} ${
               error.password ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -100,19 +177,16 @@ export function SignUpSection() {
           {renderError(error.password)}
         </div>
 
-        {/* Confirm Password */}
         <div className="flex flex-col gap-y-2">
-          <label
-            htmlFor="confirmPassword"
-            className="font-semibold text-gray-500"
-          >
+          <label className="font-semibold text-gray-500">
             Confirm Password
           </label>
           <input
-            id="confirmPassword"
-            name="confirmPassword"
             type="password"
-            placeholder="********"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            autoComplete="new-password"
             className={`${inputBase} ${
               error.confirmPassword ? 'border-red-500' : 'border-gray-200'
             }`}
@@ -120,57 +194,37 @@ export function SignUpSection() {
           {renderError(error.confirmPassword)}
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
+          disabled={loading}
           className="w-full p-4 rounded-2xl bg-black text-white font-bold
             flex items-center justify-center gap-x-2
-            transition hover:bg-black/85 hover:-translate-y-0.5"
+            transition hover:bg-black/85 hover:-translate-y-0.5
+            disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Sign Up <IoMdArrowForward className="text-xl" />
+          {loading ? 'Creating Account...' : 'Sign Up'}
+          {!loading && <IoMdArrowForward className="text-xl" />}
         </button>
       </form>
 
-      {/* Divider */}
-      <div className="my-10 flex items-center gap-x-3">
-        <span className="flex-1 h-px bg-black/15" />
-        <span className="text-sm font-semibold text-gray-500/80">
-          OR CONTINUE WITH
-        </span>
-        <span className="flex-1 h-px bg-black/15" />
-      </div>
-
-      {/* Social Login */}
-      <section className="flex justify-center gap-x-10">
-        {[FaGoogle, FaFacebook, BsTwitterX].map((Icon, i) => (
-          <div
-            key={i}
-            className="p-4 border rounded-md shadow cursor-pointer
-              border-gray-500/30 hover:bg-slate-50"
-          >
-            <Icon />
-          </div>
-        ))}
+      <section className="mt-10 flex justify-center gap-x-10 items-center">
+        <div
+          onClick={handleGoogleLoginRedirect}
+          className="shadow rounded-md border border-gray-500/30 hover:bg-slate-50 w-fit p-4 cursor-pointer flex items-center gap-x-2"
+        >
+          <FaGoogle />{' '}
+          <span className="text-gray-500 font-semibold">
+            Sign up with Google
+          </span>
+        </div>
       </section>
 
-      {/* Footer */}
-      <section className="mt-6 text-center">
+      <section className="mt-5 mb-8 text-center">
         <p className="text-gray-500/80 font-semibold">
           Already have an account?{' '}
           <Link href="/" className="font-bold text-gray-600 hover:underline">
-            Login
+            Sign In
           </Link>
-        </p>
-
-        <p className="mt-5 mb-2 text-xs text-gray-500/70">
-          BY JOINING, YOU AGREE TO OUR{' '}
-          <span className="font-bold text-gray-600 hover:underline cursor-pointer">
-            TERMS
-          </span>{' '}
-          AND{' '}
-          <span className="font-bold text-gray-600 hover:underline cursor-pointer">
-            PRIVACY
-          </span>
         </p>
       </section>
     </section>

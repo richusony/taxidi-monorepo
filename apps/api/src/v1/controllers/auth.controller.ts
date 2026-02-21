@@ -8,6 +8,7 @@ import {
   generateRefreshToken,
   hashToken,
 } from '@/utils/token-helper';
+import { ROLE_REDIRECT } from '@/config/role-redirect';
 
 export class AuthController {
   testController(req: Request, res: Response) {
@@ -26,8 +27,10 @@ export class AuthController {
     const { email, firstname, password, phone, lastname } = validation.data;
 
     try {
-      const hashedPassword = await argon2.hash(password);
+      const userExists = await prisma.users.findUnique({ where: { email } });
+      if (userExists) return res.status(400).json({ error: "Account with this email already exist" });
 
+      const hashedPassword = await argon2.hash(password);
       const newUser = await prisma.users.create({
         data: {
           email,
@@ -111,14 +114,14 @@ export class AuthController {
       if (authMode === 'cookie') {
         res.cookie('refreshToken', refreshToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
         });
 
         return res.status(200).json({
           message: 'User logged in',
           accessToken,
-          role: userExists.role[0]
+          role: userExists.role[0],
         });
       }
 
@@ -132,6 +135,17 @@ export class AuthController {
         error: 'Internal server error',
       });
     }
+  }
+
+  async googleCallback(req: Request, res: Response) {
+    const { accessToken, refreshToken, role } = req.user as any;
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+    });
+    return res.redirect(ROLE_REDIRECT[role]);
   }
 
   async refreshSession(req: Request, res: Response) {
@@ -206,13 +220,13 @@ export class AuthController {
       if (authMode === 'cookie') {
         res.cookie('refreshToken', newRefreshToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
         });
 
         return res.json({
           accessToken: newAccessToken,
-          role: user.role[0]
+          role: user.role[0],
         });
       }
 
