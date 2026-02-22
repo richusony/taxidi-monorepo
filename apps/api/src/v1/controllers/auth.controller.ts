@@ -20,7 +20,7 @@ export class AuthController {
 
     if (!validation.success) {
       return res.status(400).json({
-        error: validation.error,
+        error: validation.error.flatten().fieldErrors,
       });
     }
 
@@ -57,8 +57,10 @@ export class AuthController {
     const validation = signInSchema.safeParse(req.body);
 
     if (!validation.success) {
+      let errStr = `${validation.error.issues[0].path} - `;
+      validation.error.issues.forEach((iss)=> errStr += `${iss.message},`)
       return res.status(400).json({
-        error: validation.error,
+        error: errStr,
       });
     }
 

@@ -35,8 +35,9 @@ export function LoginSection() {
       // redirect after login
       window.location.href = ROLE_REDIRECT[data.role];
     } catch (err: any) {
+      console.log(err.response);
       setError(
-        err.response?.data?.message || 'Something went wrong. Try again.',
+        err.response?.data.error || 'Something went wrong. Try again.',
       );
     } finally {
       setLoading(false);
