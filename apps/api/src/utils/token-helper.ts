@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from '@/v1/middlewares/auth.middleware';
+import dayjs from 'dayjs';
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
@@ -19,4 +20,12 @@ export function accessTokenVerfier(token: string) {
 
 export function hashToken(token: string) {
   return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+export function generateRefreshTokenExpiry() {
+  return dayjs().add(2, 'minutes').toDate()
+}
+
+export function isRefreshTokenExpired(tokenDate: Date) {
+  return dayjs().isAfter(tokenDate)
 }

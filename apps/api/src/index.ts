@@ -7,10 +7,11 @@ import cookieParser from 'cookie-parser';
 import passport from '@/lib/passport';
 import session from 'express-session';
 
-import authRouter from '@/v1/routes/auth.routes';
-import adminRouter from '@/v1/routes/admin.routes';
-import partnerRouter from '@/v1/routes/partner.routes';
-import customerRouter from '@/v1/routes/customer.routes';
+import authRouter from '@/v1/modules/auth/auth.route';
+import adminRouter from '@/v1/modules/admin/admin.route';
+import partnerRouter from '@/v1/modules/partner/partner.route';
+import customerRouter from '@/v1/modules/customer/customer.route';
+import bookinRouter from '@/v1/modules/booking/booking.route';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -70,6 +71,7 @@ app.use('/api/v1', customerRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/partner', partnerRouter);
+app.use('/api/v1/booking', bookinRouter);
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port: ${PORT}`);

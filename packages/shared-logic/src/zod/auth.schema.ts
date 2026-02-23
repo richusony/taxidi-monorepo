@@ -16,7 +16,7 @@ export type SignUpInput = z.infer<typeof signUpSchema>;
 
 export const signInSchema = z.object({
   email: z.email('Invalid email format'),
-  password: z.string().max(20, 'Password is too long'),
+  password: z.string().min(8).nonempty("Use proper credentials"),
 });
 
 export type SignInInput = z.infer<typeof signInSchema>;

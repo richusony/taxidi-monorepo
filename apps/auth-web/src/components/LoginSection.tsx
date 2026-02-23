@@ -35,8 +35,9 @@ export function LoginSection() {
       // redirect after login
       window.location.href = ROLE_REDIRECT[data.role];
     } catch (err: any) {
+      console.log(err.response);
       setError(
-        err.response?.data?.message || 'Something went wrong. Try again.',
+        err.response?.data.error || 'Something went wrong. Try again.',
       );
     } finally {
       setLoading(false);
@@ -56,10 +57,11 @@ export function LoginSection() {
           <input
             className="rounded-xl border border-gray-200 px-4 py-3"
             type="email"
+            name='email'
             placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
+            autoComplete='email'
             required
           />
         </div>
@@ -74,6 +76,7 @@ export function LoginSection() {
           <input
             className="rounded-xl border border-gray-200 px-4 py-3"
             type="password"
+            name='password'
             placeholder="********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

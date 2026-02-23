@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Role } from '@taxidi/database';
-import { AuthenticatedRequest } from './auth.middleware';
 
 export function authorizeRoles(...allowedRoles: Role[]) {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({
         error: 'Unauthorized',
