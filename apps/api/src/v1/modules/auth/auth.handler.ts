@@ -1,16 +1,6 @@
-import dayjs from 'dayjs';
-import argon2 from 'argon2';
-import { prisma } from '@/lib/prisma';
 import { Request, Response } from 'express';
-import { signInSchema, signUpSchema } from '@taxidi/shared-logic';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  hashToken,
-} from '@/utils/token-helper';
 import { ROLE_REDIRECT } from '@/config/role-redirect';
 import { AuthService } from '@/v1/modules/auth/auth.service';
-import { Role } from '@taxidi/database';
 
 const authService = new AuthService();
 
