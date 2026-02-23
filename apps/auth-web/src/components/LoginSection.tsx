@@ -57,10 +57,11 @@ export function LoginSection() {
           <input
             className="rounded-xl border border-gray-200 px-4 py-3"
             type="email"
+            name='email'
             placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
+            autoComplete='email'
             required
           />
         </div>
@@ -75,6 +76,7 @@ export function LoginSection() {
           <input
             className="rounded-xl border border-gray-200 px-4 py-3"
             type="password"
+            name='password'
             placeholder="********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
