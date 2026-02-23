@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PartnerController } from '../controllers/partner.controller';
+import { PartnerController } from '../handlers/partner.controller';
 
 const router = Router();
 const partnerController = new PartnerController();

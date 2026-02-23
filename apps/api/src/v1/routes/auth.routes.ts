@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { Role } from '@taxidi/database';
 import passport from '@/lib/passport';
-import { AuthController } from '../controllers/auth.controller';
+import { AuthController } from '../handlers/auth.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { authorizeRoles } from '../middlewares/role.middleware';
 

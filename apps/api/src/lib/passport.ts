@@ -1,12 +1,6 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { prisma } from '@/lib/prisma';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  hashToken,
-} from '@/utils/token-helper';
-import dayjs from 'dayjs';
 
 passport.use(
   new GoogleStrategy(
@@ -39,21 +33,8 @@ passport.use(
           });
         }
 
-        const accessToken = generateAccessToken(user.id, user.role[0]);
-
-        const refreshToken = generateRefreshToken(user.id, user.role[0]);
-
-        await prisma.refreshToken.create({
-          data: {
-            tokenHash: hashToken(refreshToken),
-            userId: user.id,
-            expiresAt: dayjs().add(7, 'day').toDate(),
-          },
-        });
-
         return done(null, {
-          accessToken,
-          refreshToken,
+          userId: user.id,
           role: user.role[0],
         });
       } catch (err) {

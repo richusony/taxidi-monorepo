@@ -28,7 +28,10 @@ export class AuthController {
 
     try {
       const userExists = await prisma.users.findUnique({ where: { email } });
-      if (userExists) return res.status(400).json({ error: "Account with this email already exist" });
+      if (userExists)
+        return res
+          .status(400)
+          .json({ error: 'Account with this email already exist' });
 
       const hashedPassword = await argon2.hash(password);
       const newUser = await prisma.users.create({
@@ -58,7 +61,7 @@ export class AuthController {
 
     if (!validation.success) {
       let errStr = `${validation.error.issues[0].path} - `;
-      validation.error.issues.forEach((iss)=> errStr += `${iss.message},`)
+      validation.error.issues.forEach((iss) => (errStr += `${iss.message},`));
       return res.status(400).json({
         error: errStr,
       });
@@ -107,7 +110,7 @@ export class AuthController {
         data: {
           tokenHash: hashToken(refreshToken),
           userId: userExists.id,
-          expiresAt: dayjs().add(7, 'day').toDate(),
+          expiresAt: dayjs().add(2, 'minutes').toDate(),
         },
       });
 
@@ -140,7 +143,17 @@ export class AuthController {
   }
 
   async googleCallback(req: Request, res: Response) {
-    const { accessToken, refreshToken, role } = req.user as any;
+    const { userId, role } = req.user as any;
+
+    const refreshToken = generateRefreshToken(userId, role);
+
+    await prisma.refreshToken.create({
+      data: {
+        tokenHash: hashToken(refreshToken),
+        userId,
+        expiresAt: dayjs().add(2, 'minutes').toDate(),
+      },
+    });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -213,7 +226,7 @@ export class AuthController {
         data: {
           tokenHash: hashToken(newRefreshToken),
           userId: user.id,
-          expiresAt: dayjs().add(7, 'day').toDate(),
+          expiresAt: dayjs().add(2, 'minutes').toDate(),
         },
       });
 

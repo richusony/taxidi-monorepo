@@ -6,6 +6,8 @@ export const createApiClient = (config?: {
   getAccessToken?: () => string | null;
   onUnauthorized?: () => void;
 }) => {
+  if (!config?.baseURL || config?.baseURL == '')
+    throw new Error('API URL is not defined in .env');
   const api = axios.create({
     baseURL: config?.baseURL,
     withCredentials: true,
