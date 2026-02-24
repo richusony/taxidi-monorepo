@@ -58,7 +58,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: 'taxidi-secret',
+    secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
   }),

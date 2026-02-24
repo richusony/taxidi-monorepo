@@ -1,6 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { generatePassword } from '@/utils/passwordGenerator';
-import { generateRefreshTokenExpiry, hashToken } from '@/utils/token-helper';
 import { Role, Users } from '@taxidi/database';
 
 export class AuthRepository {
@@ -13,28 +11,18 @@ export class AuthRepository {
   }
 
   async createCustomer(user: Users) {
-    let hashedPassword = '';
-    if (user.password) {
-      hashedPassword = await generatePassword(user.password);
-      if (!hashedPassword) throw new Error('Error while generating password');
-    }
-
     return await prisma.users.create({
       data: {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        password: hashedPassword,
+        password: user.password,
         role: { set: [Role.CUSTOMER] },
       },
     });
   }
 
-  async addRefreshTokenToDB(userId: string, refreshToken: string) {
-    const REFRESH_TOKEN_EXPIRY = generateRefreshTokenExpiry();
-    if (!REFRESH_TOKEN_EXPIRY)
-      throw new Error('Error while generating refresh token expiry');
-
+  async addRefreshTokenToDB(userId: string, expiry: Date, hashedToken: string) {
     // Optional: Limit active sessions
     // await prisma.refreshToken.deleteMany({
     //   where: { userId: userExists.id },
@@ -42,9 +30,9 @@ export class AuthRepository {
 
     return await prisma.refreshToken.create({
       data: {
-        tokenHash: hashToken(refreshToken),
+        tokenHash: hashedToken,
         userId: userId,
-        expiresAt: REFRESH_TOKEN_EXPIRY,
+        expiresAt: expiry,
       },
     });
   }
