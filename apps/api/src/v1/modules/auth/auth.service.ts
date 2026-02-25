@@ -1,6 +1,9 @@
 import { Users } from '@taxidi/database';
 import { AuthRepository } from '@/v1/modules/auth/auth.repo';
-import { generatePassword, verifyPassword } from '@/utils/passwordGenerator';
+import {
+  generatePasswordHash,
+  verifyPassword,
+} from '@/utils/passwordGenerator';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -17,7 +20,7 @@ export class AuthService {
     if (userExists) throw new Error('Account with this email already exist');
 
     if (user.password) {
-      const hashedPassword = await generatePassword(user.password);
+      const hashedPassword = await generatePasswordHash(user.password);
       if (!hashedPassword) throw new Error('Error while generating password');
       user.password = hashedPassword;
     }

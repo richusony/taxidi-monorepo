@@ -23,9 +23,9 @@ export function hashToken(token: string) {
 }
 
 export function generateRefreshTokenExpiry() {
-  return dayjs().add(2, 'minutes').toDate()
+  return dayjs().add(2, 'minutes').toDate();
 }
 
 export function isRefreshTokenExpired(tokenDate: Date) {
-  return dayjs().isAfter(tokenDate)
+  return dayjs().isAfter(tokenDate);
 }

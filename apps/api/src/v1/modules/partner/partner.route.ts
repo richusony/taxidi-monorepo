@@ -2,6 +2,6 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get("/", (req, res) => res.status(200).json({ message: "partner api" }));
+router.get('/', (req, res) => res.status(200).json({ message: 'partner api' }));
 
 export default router;

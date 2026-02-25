@@ -65,13 +65,13 @@ export class AuthHandler {
     try {
       const { refreshToken } = await authService.googleSignIn(userId, role);
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-    });
-    return res.redirect(ROLE_REDIRECT[role]);
-    } catch (error:any) {
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
+      return res.redirect(ROLE_REDIRECT[role]);
+    } catch (error: any) {
       return res.status(500).json({
         error: error?.message || 'Internal server error',
       });
@@ -88,7 +88,8 @@ export class AuthHandler {
         });
       }
 
-      const {newAccessToken, newRefreshToken, role} = await authService.refreshToken(refreshToken);
+      const { newAccessToken, newRefreshToken, role } =
+        await authService.refreshToken(refreshToken);
 
       const authMode = req.headers['x-auth-mode'];
 
@@ -109,7 +110,7 @@ export class AuthHandler {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       });
-    } catch (error:any) {
+    } catch (error: any) {
       return res.status(500).json({
         error: error?.message || 'Internal server error',
       });
