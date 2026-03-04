@@ -7,11 +7,11 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 export function generateAccessToken(userId: string, role: string) {
-  return jwt.sign({ userId, role }, ACCESS_TOKEN_SECRET!, { expiresIn: '1m' });
+  return jwt.sign({ userId, role }, ACCESS_TOKEN_SECRET!, { expiresIn: '10m' });
 }
 
 export function generateRefreshToken(userId: string, role: string) {
-  return jwt.sign({ userId, role }, REFRESH_TOKEN_SECRET!, { expiresIn: '2m' });
+  return jwt.sign({ userId, role }, REFRESH_TOKEN_SECRET!, { expiresIn: '2h' });
 }
 
 export function accessTokenVerfier(token: string) {
@@ -23,7 +23,7 @@ export function hashToken(token: string) {
 }
 
 export function generateRefreshTokenExpiry() {
-  return dayjs().add(2, 'minutes').toDate();
+  return dayjs().add(2, 'hours').toDate();
 }
 
 export function isRefreshTokenExpired(tokenDate: Date) {
