@@ -1,6 +1,10 @@
 # dependencies
 node_modules
-./**/node_modules
+apps/**/node_modules
+packages/**/node_modules
+
+apps/**/.turbo
+packages/**/.turbo
 .pnpm-store
 .pnpm
 
