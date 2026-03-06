@@ -1,0 +1,26 @@
+# dependencies
+node_modules
+./**/node_modules
+.pnpm-store
+.pnpm
+
+# builds
+dist
+build
+.next
+.turbo
+tsconfig.tsbuildinfo
+
+# git
+.git
+.gitignore
+
+# logs
+*.log
+
+# env
+.env
+.env.*
+
+# OS
+.DS_Store

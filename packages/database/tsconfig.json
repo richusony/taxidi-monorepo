@@ -1,5 +1,17 @@
 {
   "extends": "@taxidi/tsconfig/base.json",
-  "include": ["src", "prisma"],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": [
+    "src",
+    "prisma",
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
