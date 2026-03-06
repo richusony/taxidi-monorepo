@@ -1,17 +1,17 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from '@/v1/middlewares/auth.middleware';
+import { JwtPayload } from '@/v1/modules/auth/auth.middleware';
 import dayjs from 'dayjs';
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 export function generateAccessToken(userId: string, role: string) {
-  return jwt.sign({ userId, role }, ACCESS_TOKEN_SECRET!, { expiresIn: '10m' });
+  return jwt.sign({ userId, role }, ACCESS_TOKEN_SECRET!, { expiresIn: '5m' });
 }
 
 export function generateRefreshToken(userId: string, role: string) {
-  return jwt.sign({ userId, role }, REFRESH_TOKEN_SECRET!, { expiresIn: '2h' });
+  return jwt.sign({ userId, role }, REFRESH_TOKEN_SECRET!, { expiresIn: '1h' });
 }
 
 export function accessTokenVerfier(token: string) {

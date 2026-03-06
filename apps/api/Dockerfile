@@ -9,7 +9,7 @@ COPY . .
 
 RUN pnpm install
 RUN pnpm --filter @taxidi/database db:generate
-RUN pnpm --filter @taxidi/api build
+RUN pnpm -r build
 
 # ---- Runner ----
 FROM node:22-alpine AS runner

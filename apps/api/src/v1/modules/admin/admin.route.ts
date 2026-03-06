@@ -4,7 +4,7 @@ import { validationMiddleware } from '@/v1/middlewares/validate.middleware';
 import { partnerSchema } from '@taxidi/shared-logic';
 import { authorizeRoles } from '@/v1/middlewares/role.middleware';
 import { Role } from '@taxidi/database';
-import { authMiddleware } from '@/v1/middlewares/auth.middleware';
+import { authMiddleware } from '@/v1/modules/auth/auth.middleware';
 
 const router = Router();
 const adminHandler = new AdminHandler();

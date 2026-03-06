@@ -1,0 +1,26 @@
+services:
+  db:
+    ports:
+      - '5432:5432'
+      - '51212:51212'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    env_file: ../.env
+
+  pgbouncer:
+    depends_on:
+      - db
+    ports:
+      - '6432:6432'
+    env_file: ../.env
+
+  api:
+    container_name: api-server
+    build:
+      context: ../
+      dockerfile: ./apps/api/Dockerfile
+    depends_on:
+      - pgbouncer
+    ports:
+      - '80:8080'

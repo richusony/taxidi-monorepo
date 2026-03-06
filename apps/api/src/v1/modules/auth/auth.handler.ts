@@ -17,9 +17,7 @@ export class AuthHandler {
         user: { id: newUser.id, email: newUser.email },
       });
     } catch (error: any) {
-      return res.status(500).json({
-        error: error?.message || 'Internal server error',
-      });
+      throw error;
     }
   }
 
@@ -53,9 +51,7 @@ export class AuthHandler {
         refreshToken,
       });
     } catch (error: any) {
-      return res.status(500).json({
-        error: error?.message || 'Internal server error',
-      });
+      throw error;
     }
   }
 
@@ -72,9 +68,7 @@ export class AuthHandler {
       });
       return res.redirect(ROLE_REDIRECT[role]);
     } catch (error: any) {
-      return res.status(500).json({
-        error: error?.message || 'Internal server error',
-      });
+      throw error;
     }
   }
 
@@ -111,9 +105,7 @@ export class AuthHandler {
         refreshToken: newRefreshToken,
       });
     } catch (error: any) {
-      return res.status(500).json({
-        error: error?.message || 'Internal server error',
-      });
+      throw error;
     }
   }
 }

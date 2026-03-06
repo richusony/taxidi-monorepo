@@ -4,10 +4,11 @@ services:
     image: postgres:17
     ports:
       - '5432:5432'
+      - '51212:51212'
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-    env_file: .env
+    env_file: ../.env
 
   pgbouncer:
     container_name: taxidi-pgbouncer
@@ -17,7 +18,7 @@ services:
       - db
     ports:
       - '6432:6432'
-    env_file: .env
+    env_file: ../.env
 
   api:
     build:
@@ -25,8 +26,6 @@ services:
       dockerfile: ./apps/api/Dockerfile
     depends_on:
       - pgbouncer
-    # ports:
-    #   - '80:8080'
     expose:
       - 8080
 
@@ -39,6 +38,3 @@ services:
       - '80:80'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-
-volumes:
-  postgres_data:

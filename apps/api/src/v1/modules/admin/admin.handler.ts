@@ -12,9 +12,7 @@ export class AdminHandler {
         partner: { id: newPartner.id, email: newPartner.email },
       });
     } catch (error: any) {
-      return res
-        .status(500)
-        .json({ error: error?.message || 'Internal server error' });
+      throw error;
     }
   }
 
@@ -23,9 +21,8 @@ export class AdminHandler {
       const partners = await adminService.getAllPartners();
       return res.status(200).json(partners);
     } catch (error: any) {
-      return res
-        .status(500)
-        .json({ error: error?.message || 'Internal server error' });
+      console.log(error);
+      throw error;
     }
   }
 }

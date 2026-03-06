@@ -4,6 +4,7 @@ import {
   generatePasswordHash,
   generateStrongPassword,
 } from '@/utils/passwordGenerator';
+import { AppError, BadRequestError } from '@/utils/errorHandler';
 
 const adminRepo = new AdminRepository();
 export class AdminService {
@@ -12,15 +13,15 @@ export class AdminService {
       partner.email,
     );
     if (partnerExistsWithEmail)
-      throw new Error('Partner with this email already exist');
+      throw new BadRequestError('Partner with this email already exist');
 
     const generatedPassword = generateStrongPassword();
     if (!generatedPassword)
-      throw new Error('Error while generating password for partner account');
+      throw new AppError('Error while generating password for partner account');
 
     const hashedPassword = await generatePasswordHash(generatedPassword);
     if (!hashedPassword)
-      throw new Error('Error while hashing password for partner account');
+      throw new AppError('Error while hashing password for partner account');
 
     partner.password = hashedPassword;
     partner.role = [Role.PARTNER];
@@ -29,7 +30,8 @@ export class AdminService {
 
   async getAllPartners() {
     const partners = await adminRepo.getAllPartners();
-    if (!partners) throw new Error('Error while fetching all partners');
+
+    if (!partners) throw new AppError('Error while fetching all partners');
 
     return partners;
   }

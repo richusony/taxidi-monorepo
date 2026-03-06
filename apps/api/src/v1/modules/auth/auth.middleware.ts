@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { accessTokenVerfier } from '@/utils/token-helper';
+import { AppError, UnAuthorizedError } from '@/utils/errorHandler';
 
 export interface JwtPayload {
   userId: string;
@@ -17,26 +18,19 @@ export function authMiddleware(
     : req.cookies?.accessToken;
 
   if (!token) {
-    return res.status(401).json({
-      error: 'Missing access token',
-    });
+    throw new UnAuthorizedError('Unauthorized Access Denied');
   }
 
   try {
     const validated = accessTokenVerfier(token);
-
     if (!validated) {
-      return res.status(401).json({
-        error: 'Invalid or expired access token',
-      });
+      throw new UnAuthorizedError('Invalid or expired access token');
     }
 
     req.user = validated;
 
     next();
-  } catch (error) {
-    return res.status(401).json({
-      error: 'Invalid or expired access token',
-    });
+  } catch (error: any) {
+    next(new AppError(error));
   }
 }
