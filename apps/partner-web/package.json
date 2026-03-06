@@ -1,5 +1,5 @@
 {
-  "name": "partner-web",
+  "name": "@taxidi/partner-web",
   "private": true,
   "version": "0.0.0",
   "type": "module",

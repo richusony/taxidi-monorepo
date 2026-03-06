@@ -1,0 +1,15 @@
+services:
+  db:
+    container_name: taxidi-db
+    image: postgres:17
+
+  pgbouncer:
+    container_name: taxidi-pgbouncer
+    image: edoburu/pgbouncer
+    restart: always
+
+  api:
+    restart: always
+
+volumes:
+  postgres_data:

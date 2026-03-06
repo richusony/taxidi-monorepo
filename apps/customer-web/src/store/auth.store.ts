@@ -10,7 +10,7 @@ interface AuthState {
 }
 
 const authUrl = process.env.NEXT_PUBLIC_AUTH_WEB_URL;
-if (!authUrl) console.error("NEXT_PUBLIC_AUTH_WEB_URL is undefined");
+if (!authUrl) console.error('NEXT_PUBLIC_AUTH_WEB_URL is undefined');
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,

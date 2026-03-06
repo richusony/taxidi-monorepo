@@ -5,11 +5,13 @@ import { defineConfig, env } from 'prisma/config';
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
+  experimental: { externalTables: true },
   migrations: {
     path: 'prisma/migrations',
     seed: 'tsx prisma/seed.ts',
   },
   datasource: {
     url: env('DATABASE_URL'),
+    // shadowDatabaseUrl: env("DIRECT_DATABASE_URL")
   },
 });

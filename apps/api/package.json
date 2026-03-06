@@ -2,7 +2,7 @@
   "name": "@taxidi/api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b && tsc-alias",
     "dev": "nodemon --exec tsx src/index.ts",
