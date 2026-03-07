@@ -2,13 +2,14 @@ services:
   db:
     container_name: taxidi-db
     image: postgres:17
-    ports:
-      - '5432:5432'
-      - '51212:51212'
+    expose:
+      - 5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - taxidi_volume:/var/lib/postgresql/data
 
     env_file: ../.env
+    networks:
+      - taxidi_network
 
   pgbouncer:
     container_name: taxidi-pgbouncer
@@ -16,18 +17,22 @@ services:
     restart: always
     depends_on:
       - db
-    ports:
-      - '6432:6432'
+    expose:
+      - 5432
     env_file: ../.env
+    networks:
+      - taxidi_network
 
   api:
     build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+      context: ../
+      dockerfile: ./apps/api/docker/Dockerfile
     depends_on:
       - pgbouncer
     expose:
       - 8080
+    networks:
+      - taxidi_network
 
   nginx:
     container_name: taxidi-proxy
@@ -37,4 +42,6 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - taxidi_network

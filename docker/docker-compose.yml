@@ -1,3 +1,4 @@
+name: taxidi-image
 services:
   db:
     container_name: taxidi-db
@@ -6,10 +7,13 @@ services:
   pgbouncer:
     container_name: taxidi-pgbouncer
     image: edoburu/pgbouncer
-    restart: always
+    restart: unless-stopped
 
-  api:
-    restart: always
+  # api:
+  #   restart: unless-stopped
 
 volumes:
-  postgres_data:
+  taxidi_volume:
+
+networks:
+  taxidi_network:
