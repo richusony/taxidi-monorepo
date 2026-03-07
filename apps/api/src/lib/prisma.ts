@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 // apps/api/src/lib/prisma.ts
 import { PrismaClient } from '@taxidi/database';
 import { PrismaPg } from '@prisma/adapter-pg';

@@ -6,21 +6,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-    env_file: ../.env
+    env_file: ../.env.local
 
   pgbouncer:
     depends_on:
       - db
     ports:
-      - '6432:6432'
-    env_file: ../.env
+      - '6432:5432'
+    env_file: ../.env.local
 
-  api:
-    container_name: api-server
-    build:
-      context: ../
-      dockerfile: ./apps/api/Dockerfile
-    depends_on:
-      - pgbouncer
-    ports:
-      - '80:8080'
+  # api:
+  #   container_name: api-server
+  #   build:
+  #     context: ../
+  #     dockerfile: ./apps/api/Dockerfile.dev
+  #   depends_on:
+  #     - pgbouncer
+  #   ports:
+  #     - '80:8080'
+  #   volumes:
+  #     - ../apps/api/src:/taxidi/apps/api/src
+  #     - /taxidi/node_modules

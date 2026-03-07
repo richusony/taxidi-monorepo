@@ -1,20 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import { Role } from '@taxidi/database';
+import { ForbiddenError, UnAuthorizedError } from '@/utils/errorHandler';
 
 export function authorizeRoles(...allowedRoles: Role[]) {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-      });
-    }
+    try {
+      if (!req.user) {
+        throw new UnAuthorizedError('Unauthorized');
+      }
 
-    if (!allowedRoles.includes(req.user.role as Role)) {
-      return res.status(403).json({
-        error: 'Forbidden: Insufficient permissions',
-      });
-    }
+      if (!allowedRoles.includes(req.user.role as Role)) {
+        throw new ForbiddenError('Forbidden: Insufficient permissions');
+      }
 
-    next();
+      next();
+    } catch (error: any) {
+      next(error);
+    }
   };
 }

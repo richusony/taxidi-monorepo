@@ -73,9 +73,11 @@ app.use('/api/v1/partner', partnerRouter);
 app.use('/api/v1/booking', bookinRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  return res.status(error.status).json({
+  console.log("===================\n",error,"\n==================");
+  const statusCode = error.status || 500;
+  return res.status(statusCode).json({
     error:
-      error.status === 500
+      statusCode === 500
         ? 'Something went wrong. Please try again later!'
         : error?.message,
   });

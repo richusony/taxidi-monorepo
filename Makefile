@@ -1,17 +1,21 @@
-dev:
-	docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up -d
+ENV ?= dev
 
-prod:
-	docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up -d
+COMPOSE=docker compose
+BASE_FILE=docker/docker-compose.yml
+ENV_FILE=docker/docker-compose.$(ENV).yml
 
-down-dev:
-	docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml down
+APP=$(COMPOSE) -f $(BASE_FILE) -f $(ENV_FILE)
 
-down-prod:
-	docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml down
+.PHONY: up down build logs
+
+up:
+	$(APP) up --build -d
+
+down:
+	$(APP) down -v
 
 build:
-	docker compose build
+	$(APP) build --no-cache
 
 logs:
-	docker compose logs -f
+	$(APP) logs -f
