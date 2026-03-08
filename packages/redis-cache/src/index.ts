@@ -1,5 +1,5 @@
-import { getRedis } from "@taxidi/redis-client";
-export * from "./cacheWrapper";
+import { getRedis } from '@taxidi/redis-client';
+export * from './cacheWrapper';
 
 const redis = getRedis();
 
@@ -11,15 +11,11 @@ export async function getCache<T>(key: string): Promise<T | null> {
   return JSON.parse(data);
 }
 
-export async function setCache(
-  key: string,
-  value: unknown,
-  ttl?: number
-) {
+export async function setCache(key: string, value: unknown, ttl?: number) {
   const data = JSON.stringify(value);
 
   if (ttl) {
-    await redis.set(key, data, "EX", ttl);
+    await redis.set(key, data, 'EX', ttl);
   } else {
     await redis.set(key, data);
   }

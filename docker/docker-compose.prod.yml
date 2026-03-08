@@ -22,7 +22,7 @@ services:
     env_file: ../.env
     networks:
       - taxidi_network
-  
+
   redis:
     expose:
       - 6379

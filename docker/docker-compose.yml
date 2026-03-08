@@ -13,7 +13,7 @@ services:
     image: redis:7
     container_name: taxidi-redis
     volumes:
-    - taxidi_redis_data:/data
+      - taxidi_redis_data:/data
     networks:
       - taxidi_network
 

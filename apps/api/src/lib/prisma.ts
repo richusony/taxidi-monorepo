@@ -6,7 +6,8 @@ const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) throw new Error('NODE_ENV is not set');
 
 const adapter = new PrismaPg({
-  connectionString: NODE_ENV === 'production'
+  connectionString:
+    NODE_ENV === 'production'
       ? process.env.DATABASE_URL
       : process.env.LOCAL_DATABASE_URL,
 });

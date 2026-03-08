@@ -73,7 +73,7 @@ app.use('/api/v1/partner', partnerRouter);
 app.use('/api/v1/booking', bookinRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log("===================\n",error,"\n==================");
+  console.log('===================\n', error, '\n==================');
   const statusCode = error.status || 500;
   return res.status(statusCode).json({
     error:

@@ -32,7 +32,9 @@ export class AdminHandler {
 
     try {
       await adminService.updatePartner(partnerId, partnerDetails);
-      return res.status(200).json({ message: 'Partner details has been updated' });
+      return res
+        .status(200)
+        .json({ message: 'Partner details has been updated' });
     } catch (error: any) {
       throw error;
     }

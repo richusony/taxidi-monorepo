@@ -30,12 +30,16 @@ export class AdminService {
   }
 
   async getAllPartners() {
-    const cacheKey = "partners:list";
+    const cacheKey = 'partners:list';
 
-    // const partners = await adminRepo.getAllPartners();
+    /* redis-cache-wrapper will check cache exists,
+       if true return cache, else evoke and return
+       value from adminRepo.getAllPartners and cache
+      for 60 sec
+    */
     const partners = await cacheWrapper(cacheKey, 60, adminRepo.getAllPartners);
     if (!partners) throw new AppError('Error while fetching partners');
-    
+
     return partners;
   }
 
@@ -53,7 +57,8 @@ export class AdminService {
 
     if (partner.phone && partnerExists.phone !== partner.phone) {
       const phoneExists = await adminRepo.findPartnerByPhone(partner.phone);
-      if (phoneExists) throw new BadRequestError('This phone number is already taken');
+      if (phoneExists)
+        throw new BadRequestError('This phone number is already taken');
     }
 
     return await adminRepo.updatePartner(partnerExists.id, partner);

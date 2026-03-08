@@ -34,7 +34,7 @@ export class AdminRepository {
     });
   }
 
-  async updatePartner(id:string, partner: Users) {
+  async updatePartner(id: string, partner: Users) {
     return await prisma.users.update({ where: { id }, data: partner });
   }
 }
