@@ -1,4 +1,5 @@
 import { Role, Users } from '@taxidi/database';
+import { cacheWrapper } from '@taxidi/redis-cache';
 import { AdminRepository } from '@/v1/modules/admin/admin.repo';
 import {
   generatePasswordHash,
@@ -29,10 +30,12 @@ export class AdminService {
   }
 
   async getAllPartners() {
-    const partners = await adminRepo.getAllPartners();
+    const cacheKey = "partners:list";
 
-    if (!partners) throw new AppError('Error while fetching all partners');
-
+    // const partners = await adminRepo.getAllPartners();
+    const partners = await cacheWrapper(cacheKey, 60, adminRepo.getAllPartners);
+    if (!partners) throw new AppError('Error while fetching partners');
+    
     return partners;
   }
 

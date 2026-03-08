@@ -1,0 +1,22 @@
+{
+  "name": "@taxidi/redis-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "devDependencies": {
+    "@taxidi/tsconfig": "workspace:*",
+    "@types/node": "^25.3.5"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "ioredis": "^5.10.0"
+  }
+}

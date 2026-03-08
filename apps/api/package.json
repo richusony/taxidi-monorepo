@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",
     "@taxidi/database": "workspace:*",
+    "@taxidi/redis-cache": "workspace:*",
     "@taxidi/shared-logic": "workspace:*",
     "@taxidi/tsconfig": "workspace:*",
     "@types/jsonwebtoken": "^9.0.10",
