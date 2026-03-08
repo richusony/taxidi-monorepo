@@ -1,10 +1,11 @@
 import { Role, Users } from '@taxidi/database';
+import { cacheWrapper } from '@taxidi/redis-cache';
 import { AdminRepository } from '@/v1/modules/admin/admin.repo';
 import {
   generatePasswordHash,
   generateStrongPassword,
 } from '@/utils/passwordGenerator';
-import { AppError, BadRequestError } from '@/utils/errorHandler';
+import { AppError, BadRequestError, NotFoundError } from '@/utils/errorHandler';
 
 const adminRepo = new AdminRepository();
 export class AdminService {
@@ -29,10 +30,37 @@ export class AdminService {
   }
 
   async getAllPartners() {
-    const partners = await adminRepo.getAllPartners();
+    const cacheKey = 'partners:list';
 
-    if (!partners) throw new AppError('Error while fetching all partners');
+    /* redis-cache-wrapper will check cache exists,
+       if true return cache, else evoke and return
+       value from adminRepo.getAllPartners and cache
+      for 60 sec
+    */
+    const partners = await cacheWrapper(cacheKey, 60, adminRepo.getAllPartners);
+    if (!partners) throw new AppError('Error while fetching partners');
 
     return partners;
+  }
+
+  async updatePartner(id: string, partner: Users) {
+    if (id == '' || id == undefined)
+      throw new BadRequestError('Missing required fields');
+
+    const partnerExists = await adminRepo.findPartnerById(id.trim());
+    if (!partnerExists) throw new NotFoundError('Partner does not exist');
+
+    if (partnerExists.email !== partner.email) {
+      const emailExists = await adminRepo.findPartnerByEmail(partner.email);
+      if (emailExists) throw new BadRequestError('This email is already taken');
+    }
+
+    if (partner.phone && partnerExists.phone !== partner.phone) {
+      const phoneExists = await adminRepo.findPartnerByPhone(partner.phone);
+      if (phoneExists)
+        throw new BadRequestError('This phone number is already taken');
+    }
+
+    return await adminRepo.updatePartner(partnerExists.id, partner);
   }
 }

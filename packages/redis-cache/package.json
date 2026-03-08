@@ -1,0 +1,21 @@
+{
+  "name": "@taxidi/redis-cache",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "dependencies": {
+    "@taxidi/redis-client": "workspace:*",
+    "@taxidi/tsconfig": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5"
+  }
+}

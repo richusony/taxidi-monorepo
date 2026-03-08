@@ -23,6 +23,10 @@ services:
     networks:
       - taxidi_network
 
+  redis:
+    expose:
+      - 6379
+
   api:
     build:
       context: ../

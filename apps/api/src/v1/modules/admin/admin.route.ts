@@ -12,7 +12,7 @@ const adminHandler = new AdminHandler();
 router.use(authMiddleware);
 router.use(authorizeRoles(Role.ADMIN));
 
-router.get('/', (req, res) => res.status(200).json({ message: 'admin api' }));
+router.get('/', (_, res) => res.status(200).json({ message: 'admin api' }));
 
 router
   .route('/partners')
@@ -21,5 +21,9 @@ router
     validationMiddleware(partnerSchema),
     adminHandler.handlePartnerAccountCreation,
   );
+
+router
+  .route('/partners/:id')
+  .patch(validationMiddleware(partnerSchema), adminHandler.handleUpdatePartner);
 
 export default router;

@@ -2,18 +2,21 @@ services:
   db:
     ports:
       - '5432:5432'
-      - '51212:51212'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - taxidi_volume:/var/lib/postgresql/data
 
-    env_file: ../.env.local
+    env_file: ../.env
 
   pgbouncer:
     depends_on:
       - db
     ports:
       - '6432:5432'
-    env_file: ../.env.local
+    env_file: ../.env
+
+  redis:
+    ports:
+      - '6379:6379'
 
   # api:
   #   container_name: api-server

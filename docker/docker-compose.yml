@@ -9,11 +9,20 @@ services:
     image: edoburu/pgbouncer
     restart: unless-stopped
 
+  redis:
+    image: redis:7
+    container_name: taxidi-redis
+    volumes:
+      - taxidi_redis_data:/data
+    networks:
+      - taxidi_network
+
   # api:
   #   restart: unless-stopped
 
 volumes:
   taxidi_volume:
+  taxidi_redis_data:
 
 networks:
   taxidi_network:
