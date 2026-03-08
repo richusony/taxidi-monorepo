@@ -20,10 +20,21 @@ export class AdminRepository {
     });
   }
 
+  async findPartnerByPhone(phone: string) {
+    return await prisma.users.findUnique({
+      where: { phone },
+      omit: { password: true },
+    });
+  }
+
   async getAllPartners() {
     return await prisma.users.findMany({
       where: { role: { has: Role.PARTNER } },
       omit: { password: true },
     });
+  }
+
+  async updatePartner(id:string, partner: Users) {
+    return await prisma.users.update({ where: { id }, data: partner });
   }
 }

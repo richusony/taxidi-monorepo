@@ -2,16 +2,16 @@
 // npm install --save-dev prisma dotenv
 import 'dotenv/config';
 import { defineConfig, env } from 'prisma/config';
+const NODE_ENV = env('NODE_ENV');
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
-  experimental: { externalTables: true },
   migrations: {
     path: 'prisma/migrations',
     seed: 'tsx prisma/seed.ts',
   },
   datasource: {
-    url: env('DATABASE_URL'),
+    url: NODE_ENV === "production" ? env('DATABASE_URL'): env('LOCAL_DATABASE_URL')
     // shadowDatabaseUrl: env("DIRECT_DATABASE_URL")
   },
 });
