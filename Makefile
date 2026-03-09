@@ -1,8 +1,8 @@
 ENV ?= dev
 
 COMPOSE=docker compose
-BASE_FILE=docker/docker-compose.yml
-ENV_FILE=docker/docker-compose.$(ENV).yml
+BASE_FILE=compose/docker-compose.yml
+ENV_FILE=compose/docker-compose.$(ENV).yml
 
 APP=$(COMPOSE) -f $(BASE_FILE) -f $(ENV_FILE)
 

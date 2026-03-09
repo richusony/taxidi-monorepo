@@ -3,14 +3,15 @@ import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors, { CorsOptions } from 'cors';
 import cookieParser from 'cookie-parser';
-import passport from '@/lib/passport';
+import passport from '@lib/passport';
 import session from 'express-session';
 
-import authRouter from '@/v1/modules/auth/auth.route';
-import adminRouter from '@/v1/modules/admin/admin.route';
+import authRouter from '@v1/modules/auth/auth.route';
+import adminRouter from '@v1/modules/admin/admin.route';
 import partnerRouter from '@/v1/modules/partner/partner.route';
-import customerRouter from '@/v1/modules/customer/customer.route';
-import bookinRouter from '@/v1/modules/booking/booking.route';
+import customerRouter from '@v1/modules/customer/customer.route';
+import bookinRouter from '@v1/modules/booking/booking.route';
+import { logger } from '@lib/pino';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -73,7 +74,7 @@ app.use('/api/v1/partner', partnerRouter);
 app.use('/api/v1/booking', bookinRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log('===================\n', error, '\n==================');
+  logger.error(error?.message);
   const statusCode = error.status || 500;
   return res.status(statusCode).json({
     error:
@@ -84,5 +85,5 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port: ${PORT}`);
+  logger.info(`Server running on port: ${PORT}`);
 });
