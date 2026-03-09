@@ -17,39 +17,39 @@ const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 
-const corsOptions: CorsOptions = {
-  origin: function (origin, callback) {
-    const req = this as express.Request;
+const corsOptionsDelegate = (req: Request): CorsOptions => {
+  const origin = req.header('origin');
 
-    // ✅ DEV MODE → allow everything
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
+  // ✅ DEV MODE
+  if (process.env.NODE_ENV !== 'production') {
+    return {
+      origin: true,
+      credentials: true,
+    };
+  }
+
+  // ✅ PRODUCTION RULES
+
+  if (!origin) {
+    const userAgent = req.header('user-agent');
+
+    if (userAgent?.includes('TaxidiMobile')) {
+      return { origin: true, credentials: true };
     }
 
-    // ✅ PRODUCTION RULES
+    return { origin: false };
+  }
 
-    if (!origin) {
-      if (req.headers['user-agent']?.includes('TaxidiMobile')) {
-        return callback(null, true);
-      }
+  if (allowedOrigins.includes(origin)) {
+    return { origin: true, credentials: true };
+  }
 
-      return callback(new Error('Origin required'));
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error('CORS not allowed'));
-  },
-
-  methods: ['GET', 'POST', 'DELETE', 'PATCH'],
-  credentials: true,
-  optionsSuccessStatus: 200,
+  return { origin: false };
 };
 
-app.use(cors(corsOptions));
-// app.options("*", cors(corsOptions));
+app.use((req, res, next) => {
+  cors(corsOptionsDelegate(req))(req, res, next);
+});
 
 app.use(cookieParser());
 app.use(express.json());

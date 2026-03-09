@@ -14,14 +14,13 @@ services:
     container_name: taxidi-redis
     volumes:
       - taxidi_redis_data:/data
-    networks:
-      - taxidi_network
 
   # api:
   #   restart: unless-stopped
 
 volumes:
   taxidi_volume:
+    external: true
   taxidi_redis_data:
 
 networks:

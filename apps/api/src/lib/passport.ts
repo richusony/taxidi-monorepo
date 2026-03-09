@@ -17,21 +17,17 @@ passport.use(
           return done(null, false);
         }
 
-        let user = await prisma.users.findUnique({
+        const user = await prisma.users.upsert({
           where: { email },
+          update: {},
+          create: {
+            email,
+            firstname: profile.name?.givenName || '',
+            lastname: profile.name?.familyName || '',
+            password: '',
+            role: { set: ['CUSTOMER'] },
+          },
         });
-
-        if (!user) {
-          user = await prisma.users.create({
-            data: {
-              email,
-              firstname: profile.name?.givenName || '',
-              lastname: profile.name?.familyName || '',
-              password: '',
-              role: { set: ['CUSTOMER'] },
-            },
-          });
-        }
 
         return done(null, {
           userId: user.id,

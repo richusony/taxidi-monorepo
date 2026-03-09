@@ -26,6 +26,8 @@ services:
   redis:
     expose:
       - 6379
+    networks:
+      - taxidi_network
 
   api:
     build:
@@ -33,10 +35,13 @@ services:
       dockerfile: ./apps/api/docker/Dockerfile
     depends_on:
       - pgbouncer
+      - redis
     expose:
       - 8080
     networks:
       - taxidi_network
+    env_file:
+      - ../apps/api/.env
 
   nginx:
     container_name: taxidi-proxy
