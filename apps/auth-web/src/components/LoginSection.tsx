@@ -9,9 +9,11 @@ import { useAuthStore } from 'src/store/auth.store';
 import { ROLE_REDIRECT } from 'src/config/role-redirect';
 import { FaGoogle } from 'react-icons/fa';
 import { handleGoogleLoginRedirect } from 'src/utils/helper';
+import { useRouter } from 'next/navigation';
 
 export function LoginSection() {
-  const setAccessToken = useAuthStore((s) => s.setAccessToken);
+  const router = useRouter();
+  const { setAccessToken } = useAuthStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,9 +32,12 @@ export function LoginSection() {
       });
 
       setAccessToken(data.accessToken);
-      window.location.replace(ROLE_REDIRECT[data.roles[0]]);
+      if (data.roles && data.roles.length > 1) {
+        router.push('/login-as');
+      } else {
+        window.location.replace(ROLE_REDIRECT[data.roles[0]]);
+      }
     } catch (err: any) {
-      console.log(err.response);
       setError(err.response?.data.error || 'Something went wrong. Try again.');
     } finally {
       setLoading(false);

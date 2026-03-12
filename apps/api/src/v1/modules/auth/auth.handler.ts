@@ -47,7 +47,7 @@ export class AuthHandler {
 
   async googleCallback(req: Request, res: Response) {
     const { userId, roles } = req.user as { userId: string; roles: RoleName[] };
-    const authMode = req.headers['x-auth-mode'];
+    const state = req.query.state as string;
 
     try {
       const { refreshToken, accessToken } = await authService.googleSignIn(
@@ -55,26 +55,31 @@ export class AuthHandler {
         roles,
       );
 
-      if (authMode === 'cookie') {
-        res.cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
+      if (state === 'taxidi-mobile') {
+        return res.status(200).json({
+          message: 'User logged in',
+          accessToken,
+          refreshToken,
         });
-
-        return res.redirect(ROLE_REDIRECT["AUTH"]);
-        // return res.status(200).json({
-        //   message: 'User logged in',
-        //   accessToken,
-        //   roles,
-        // });
       }
 
-      return res.status(200).json({
-        message: 'User logged in',
-        accessToken,
-        refreshToken,
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
       });
+
+      // user has multiple roles
+      if (roles.length > 1) {
+        return res.redirect(`${ROLE_REDIRECT['AUTH']}/login-as`)
+      }
+
+      return res.redirect(ROLE_REDIRECT[roles[0]]);
+      // return res.status(200).json({
+      //   message: 'User logged in',
+      //   accessToken,
+      //   roles,
+      // });
     } catch (error: any) {
       throw error;
     }

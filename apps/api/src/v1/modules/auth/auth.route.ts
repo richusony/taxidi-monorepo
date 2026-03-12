@@ -21,9 +21,17 @@ router.post(
 
 router.get(
   '/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-  }),
+  (req, res, next) => {
+    const state = typeof req.query.state === 'string'
+      ? req.query.state
+      : 'taxidi-web';
+
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      state,
+      session: false,
+    })(req, res, next);
+  }
 );
 
 router.get(

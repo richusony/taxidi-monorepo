@@ -101,7 +101,8 @@ export class AuthService {
 
     if (!user) {
       const customerRole = await authRepo.findCustomerRole();
-      if (!customerRole) throw new AppError("Customer role is not set on database");
+      if (!customerRole)
+        throw new AppError('Customer role is not set on database');
 
       user = await authRepo.createCustomer({
         email,
@@ -116,12 +117,12 @@ export class AuthService {
             },
           },
         },
-        password: ""
+        password: '',
       });
     }
 
     const userRoles = await authRepo.fetchUserRoles(user.id);
-    return {user, roles:userRoles};
+    return { user, roles: userRoles };
   }
 
   async googleSignIn(userId: string, roles: RoleName[]) {
@@ -165,9 +166,11 @@ export class AuthService {
       throw new AppError('Invalid refresh token');
     }
 
-    if (storedToken.revoked) {
-      await authRepo.revokeAllRefreshTokens(storedToken.userId);
-      throw new AppError('Refresh token reuse detected');
+    if (process.env.NODE_ENV === 'production') {
+      if (storedToken.revoked) {
+        await authRepo.revokeAllRefreshTokens(storedToken.userId);
+        throw new AppError('Refresh token reuse detected');
+      }
     }
 
     const isTokenExpired = isRefreshTokenExpired(storedToken.expiresAt);
