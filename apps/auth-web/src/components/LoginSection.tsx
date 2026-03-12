@@ -29,11 +29,8 @@ export function LoginSection() {
         password,
       });
 
-      // assuming backend returns { accessToken }
       setAccessToken(data.accessToken);
-
-      // redirect after login
-      window.location.href = ROLE_REDIRECT[data.role];
+      window.location.replace(ROLE_REDIRECT[data.roles[0]]);
     } catch (err: any) {
       console.log(err.response);
       setError(err.response?.data.error || 'Something went wrong. Try again.');

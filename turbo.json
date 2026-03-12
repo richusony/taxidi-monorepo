@@ -16,6 +16,7 @@
     "db:generate": {},
     "db:deploy": {},
     "db:migrate": {},
+    "db:build": {},
     "db:seed": {},
     "db:studio": {},
     "db:reset": {}

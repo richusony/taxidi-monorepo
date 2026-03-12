@@ -10,6 +10,9 @@
   "scripts": {
     "build": "tsc -b"
   },
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

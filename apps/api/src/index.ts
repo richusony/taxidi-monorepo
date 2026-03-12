@@ -3,7 +3,7 @@ import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors, { CorsOptions } from 'cors';
 import cookieParser from 'cookie-parser';
-import passport from '@lib/passport';
+import passport from '@/lib/passport/index';
 import session from 'express-session';
 
 import authRouter from '@v1/modules/auth/auth.route';
@@ -75,6 +75,7 @@ app.use('/api/v1/booking', bookinRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   logger.error(error?.message);
+  console.error(error?.message);
   const statusCode = error.status || 500;
   return res.status(statusCode).json({
     error:

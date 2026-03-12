@@ -1,7 +1,8 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -13,166 +14,130 @@ model Users {
   firstname String
   lastname  String?
   email     String  @unique
+  googleId  String?
   phone     String? @unique
-  password String
+  password  String?
 
-  role Role[]
+  roles UserRole[]
 
-  vehicles Vehicles[]
-  bookings Bookings[]
-  reviews Reviews[]
-  wallet   Wallet?
+  company       RentalCompany?
+  vehicles      Vehicles[]
   refresh_token RefreshToken[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([email])
-
   @@map("users")
 }
 
+model Role {
+  id   String @id @default(uuid())
+  name RoleName @unique
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id   String @id @default(uuid())
+  name String @unique
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  user Users @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@index([roleId])
+
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+
+@@map("role_permissions")
+}
+
+model RentalCompany {
+  id                  String  @id @default(uuid())
+  company_name        String
+  owner_id            String  @unique
+  owner               Users   @relation(fields: [owner_id], references: [id])
+  company_location_id String?  @unique
+  company_location    Address? @relation(fields: [company_location_id], references: [id])
+  is_blocked          Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rental_company")
+}
+
 model Vehicles {
-  id                          String   @id @default(uuid())
+  id String @id @default(uuid())
 
-  brand                       String
-  model                       String
+  brand String
+  model String
 
-  kilometers_driven           Int
-  vehicle_age                 Int
-  mileage                     Float
+  kilometers_driven Int
+  vehicle_age       Int
+  mileage           Float
 
-  owner_id                    String
-  owner                       Users    @relation(fields: [owner_id], references: [id])
+  owner_id String
+  owner    Users  @relation(fields: [owner_id], references: [id])
 
-  is_blocked                  Boolean  @default(false)
+  is_blocked Boolean @default(false)
 
-  price_per_hour_subunits     BigInt
-  price_per_week_subunits     BigInt
+  price_per_hour_subunits Int
+  price_per_week_subunits Int
 
-  pickup_location_id          String
-  pickup_location             Locations @relation(fields: [pickup_location_id], references: [id])
+  pickup_location_id String
+  pickup_location    Address @relation(fields: [pickup_location_id], references: [id])
 
-  current_status              VehicleStatus @default(AVAILABLE)
+  current_status VehicleStatus @default(AVAILABLE)
 
-  bookings                    Bookings[]
-  reviews                     Reviews[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt
-
-  @@index([owner_id])
+  @@index([owner_id, pickup_location_id])
   @@map("vehicles")
 }
 
-model Locations {
-  id          String   @id @default(uuid())
+model Address {
+  id               String     @id @default(uuid())
+  address_line_one String
+  address_line_two String?
+  address_tag      AddressTag @default(COMPANY)
+  latitude         Float?
+  longitude        Float?
 
-  address     String
-  latitude    String
-  longitude   String
+  company RentalCompany?
 
-  vehicles    Vehicles[]
+  vehicles   Vehicles[]
 
-  createdAt   DateTime @default(now())
 
-  @@map("locations")
-}
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-model Bookings {
-  id                      String   @id @default(uuid())
-
-  customer_id             String
-  customer                Users    @relation(fields: [customer_id], references: [id])
-
-  vehicle_id              String
-  vehicle                 Vehicles @relation(fields: [vehicle_id], references: [id])
-
-  start_date              DateTime
-  end_date                DateTime
-
-  total_price_subunits    BigInt
-
-  status                  BookingStatus @default(PENDING)
-
-  payment                 Payments?
-
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-
-  @@index([customer_id])
-  @@index([vehicle_id])
-  @@index([status])
-
-  @@map("bookings") // This tells Prisma: Call it "Booking" in TS, but "bookings" in Postgres
-}
-
-model Payments {
-  id                      String   @id @default(uuid())
-
-  booking_id              String   @unique
-  booking                 Bookings @relation(fields: [booking_id], references: [id])
-
-  amount_subunits         BigInt
-
-  status                  PaymentStatus @default(PENDING)
-
-  gateway_transaction_id  String?
-
-  createdAt               DateTime @default(now())
-
-  @@map("payments")
-}
-
-model Wallet {
-  id              String   @id @default(uuid())
-
-  user_id         String   @unique
-  user            Users    @relation(fields: [user_id], references: [id])
-
-  balance         BigInt   @default(0)
-
-  transactions    WalletTransactions[]
-
-  createdAt       DateTime @default(now())
-
-  @@map("wallet")
-}
-
-model WalletTransactions {
-  id              String   @id @default(uuid())
-
-  wallet_id       String
-  wallet          Wallet   @relation(fields: [wallet_id], references: [id])
-
-  amount          BigInt
-
-  type            WalletTxnType
-
-  reference_id    String?   // booking / payout / refund etc
-
-  createdAt       DateTime @default(now())
-
-  @@index([wallet_id])
-
-  @@map("wallet_transactions")
-}
-
-model Reviews {
-  id              String   @id @default(uuid())
-
-  vehicle_id      String
-  vehicle         Vehicles @relation(fields: [vehicle_id], references: [id])
-
-  customer_id     String
-  customer        Users    @relation(fields: [customer_id], references: [id])
-
-  rating          Int
-  comment         String?
-
-  createdAt       DateTime @default(now())
-
-  @@map("reviews")
+  @@map("address")
 }
 
 model RefreshToken {
@@ -181,18 +146,16 @@ model RefreshToken {
   userId     String
   user       Users    @relation(fields: [userId], references: [id])
   expiresAt  DateTime
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   revoked    Boolean  @default(false)
 
   @@index([tokenHash])
-
   @@map("refresh_token")
 }
 
-
 // enums
 
-enum Role {
+enum RoleName {
   CUSTOMER
   PARTNER
   ADMIN
@@ -204,20 +167,7 @@ enum VehicleStatus {
   MAINTENANCE
 }
 
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
-}
-
-enum PaymentStatus {
-  PENDING
-  SUCCESS
-  FAILED
-}
-
-enum WalletTxnType {
-  CREDIT
-  DEBIT
+enum AddressTag {
+  HOME
+  COMPANY
 }

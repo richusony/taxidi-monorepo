@@ -1,35 +1,59 @@
 import { Request, Response } from 'express';
-import { ROLE_REDIRECT } from '@/config/role-redirect';
 import { AuthService } from '@/v1/modules/auth/auth.service';
+import { SignInInputDto, SignUpInputDto } from './auth.dto';
+import { UnAuthorizedError } from '@/utils/errorHandler';
+import { RoleName } from '@taxidi/database';
+import { ROLE_REDIRECT } from '@/config/role-redirect';
 
 const authService = new AuthService();
 
 export class AuthHandler {
-  test(res: Response) {
-    return res.status(200).json({ message: 'it worked' });
-  }
-
   async signUpWithEmailAndPassword(req: Request, res: Response) {
-    try {
-      const newUser = await authService.signUp(req.body);
-      return res.status(200).json({
-        message: 'User created successfully',
-        user: { id: newUser.id, email: newUser.email },
-      });
-    } catch (error: any) {
-      throw error;
-    }
+    const data: SignUpInputDto = req.body;
+    const newUser = await authService.signUp(data);
+
+    return res.status(200).json({
+      message: 'User created successfully',
+      user: { id: newUser.id, email: newUser.email },
+    });
   }
 
   async signInWithEmailAndPassword(req: Request, res: Response) {
-    const { email, password } = req.body;
-    try {
-      const { accessToken, refreshToken, role } = await authService.signIn(
-        email,
-        password,
-      );
+    const data: SignInInputDto = req.body;
+    const { accessToken, refreshToken, roles } = await authService.signIn(data);
 
-      const authMode = req.headers['x-auth-mode'];
+    const authMode = req.headers['x-auth-mode'];
+
+    if (authMode === 'cookie') {
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
+
+      return res.status(200).json({
+        message: 'User logged in',
+        accessToken,
+        roles,
+      });
+    }
+
+    return res.status(200).json({
+      message: 'User logged in',
+      accessToken,
+      refreshToken,
+    });
+  }
+
+  async googleCallback(req: Request, res: Response) {
+    const { userId, roles } = req.user as { userId: string; roles: RoleName[] };
+    const authMode = req.headers['x-auth-mode'];
+
+    try {
+      const { refreshToken, accessToken } = await authService.googleSignIn(
+        userId,
+        roles,
+      );
 
       if (authMode === 'cookie') {
         res.cookie('refreshToken', refreshToken, {
@@ -38,11 +62,12 @@ export class AuthHandler {
           sameSite: 'lax',
         });
 
-        return res.status(200).json({
-          message: 'User logged in',
-          accessToken,
-          role,
-        });
+        return res.redirect(ROLE_REDIRECT["AUTH"]);
+        // return res.status(200).json({
+        //   message: 'User logged in',
+        //   accessToken,
+        //   roles,
+        // });
       }
 
       return res.status(200).json({
@@ -55,57 +80,34 @@ export class AuthHandler {
     }
   }
 
-  async googleCallback(req: Request, res: Response) {
-    const { userId, role } = req.user as any;
+  async refreshSession(req: Request, res: Response) {
+    const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
 
-    try {
-      const { refreshToken } = await authService.googleSignIn(userId, role);
+    if (!refreshToken) {
+      throw new UnAuthorizedError('Missing token');
+    }
 
-      res.cookie('refreshToken', refreshToken, {
+    const { newAccessToken, newRefreshToken, roles } =
+      await authService.refreshToken(refreshToken);
+
+    const authMode = req.headers['x-auth-mode'];
+
+    if (authMode === 'cookie') {
+      res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
       });
-      return res.redirect(ROLE_REDIRECT[role]);
-    } catch (error: any) {
-      throw error;
-    }
-  }
-
-  async refreshSession(req: Request, res: Response) {
-    try {
-      const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
-
-      if (!refreshToken) {
-        return res.status(401).json({
-          error: 'Missing refresh token',
-        });
-      }
-
-      const { newAccessToken, newRefreshToken, role } =
-        await authService.refreshToken(refreshToken);
-
-      const authMode = req.headers['x-auth-mode'];
-
-      if (authMode === 'cookie') {
-        res.cookie('refreshToken', newRefreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-        });
-
-        return res.json({
-          accessToken: newAccessToken,
-          role,
-        });
-      }
 
       return res.json({
         accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
+        roles,
       });
-    } catch (error: any) {
-      throw error;
     }
+
+    return res.json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
   }
 }

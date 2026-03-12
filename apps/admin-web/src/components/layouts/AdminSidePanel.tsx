@@ -29,8 +29,8 @@ const AdminSidePanel = ({ isSidePanelOpen } : { isSidePanelOpen: boolean }) => {
             pathIcon: <TbBrandGoogleAnalytics />
         },
         {
-            path: "/host-applications",
-            pathName: "Host Requests",
+            path: "/partners",
+            pathName: "Manage Partners",
             pathIcon:  <TiThListOutline />
         }
     ];
@@ -39,7 +39,7 @@ const AdminSidePanel = ({ isSidePanelOpen } : { isSidePanelOpen: boolean }) => {
     return (
         <aside className={`transition-all ease-linear absolute md:static min-h-screen lg:w-[20%] pl-5 py-4 flex flex-col justify-between bg-[#171717] text-white`}>
             <div>
-                <Link to={"/"} className="text-xl font-bold">Taxidi</Link>
+                <Link to={"/"} className="text-xl font-bold">Taxidi {isSidePanelOpen}</Link>
 
                 <nav className="mt-4">
                     <ul className="">

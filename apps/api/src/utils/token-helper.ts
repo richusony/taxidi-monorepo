@@ -2,16 +2,18 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from '@/v1/modules/auth/auth.middleware';
 import dayjs from 'dayjs';
+import { randomUUID } from "crypto";
+import { RoleName } from '@taxidi/database';
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
-export function generateAccessToken(userId: string, role: string) {
-  return jwt.sign({ userId, role }, ACCESS_TOKEN_SECRET!, { expiresIn: '5m' });
+export function generateAccessToken(userId: string, roles: RoleName[]) {
+  return jwt.sign({ userId, roles, jti: randomUUID() }, ACCESS_TOKEN_SECRET!, { expiresIn: '5m' });
 }
 
-export function generateRefreshToken(userId: string, role: string) {
-  return jwt.sign({ userId, role }, REFRESH_TOKEN_SECRET!, { expiresIn: '1h' });
+export function generateRefreshToken(userId: string, roles: RoleName[]) {
+  return jwt.sign({ userId, roles, jti: randomUUID() }, REFRESH_TOKEN_SECRET!, { expiresIn: '1h' });
 }
 
 export function accessTokenVerfier(token: string) {
@@ -23,7 +25,7 @@ export function hashToken(token: string) {
 }
 
 export function generateRefreshTokenExpiry() {
-  return dayjs().add(2, 'hours').toDate();
+  return dayjs().add(1, 'hours').toDate();
 }
 
 export function isRefreshTokenExpired(tokenDate: Date) {

@@ -3,3 +3,9 @@
 .bg-img {
   background-image: url("/taxidi-auth-bg.webp");
 } */
+
+.hide-scrollbar::-webkit-scrollbar {
+  scrollbar-width: 0;
+  -ms-overflow-style: none; 
+  --webkit-scrollbar-width:0
+}

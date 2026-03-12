@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import passport from '@/lib/passport';
+import passport from '@/lib/passport/index';
 import { AuthHandler } from '@/v1/modules/auth/auth.handler';
 import { signInSchema, signUpSchema } from '@taxidi/shared-logic';
 import { validationMiddleware } from '@/v1/middlewares/validate.middleware';

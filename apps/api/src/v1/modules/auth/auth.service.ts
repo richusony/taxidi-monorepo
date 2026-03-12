@@ -1,4 +1,3 @@
-import { Users } from '@taxidi/database';
 import { AuthRepository } from '@/v1/modules/auth/auth.repo';
 import {
   generatePasswordHash,
@@ -12,11 +11,13 @@ import {
   isRefreshTokenExpired,
 } from '@/utils/token-helper';
 import { AppError, BadRequestError } from '@/utils/errorHandler';
+import { SignInInputDto, SignUpInputDto } from './auth.dto';
+import { RoleName } from '@taxidi/database';
 
 const authRepo = new AuthRepository();
 
 export class AuthService {
-  async signUp(user: Users) {
+  async signUp(user: SignUpInputDto) {
     const userExists = await authRepo.findUserWithEmail(user.email);
     if (userExists)
       throw new BadRequestError('Account with this email already exist');
@@ -28,25 +29,48 @@ export class AuthService {
       user.password = hashedPassword;
     }
 
-    return await authRepo.createCustomer(user);
+    const customerRole = await authRepo.findCustomerRole();
+    if (!customerRole) throw new AppError('Customer role does not exist');
+
+    return await authRepo.createCustomer({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      phone: user.phone,
+      password: user.password,
+
+      roles: {
+        create: {
+          role: {
+            connect: {
+              id: customerRole.id,
+            },
+          },
+        },
+      },
+    });
   }
 
-  async signIn(email: string, password: string) {
-    const userExists = await authRepo.findUserWithEmail(email);
+  async signIn(data: SignInInputDto) {
+    const userExists = await authRepo.findUserWithEmail(data.email);
     if (!userExists) throw new BadRequestError('Invalid credentials');
 
-    const isPasswordValid = await verifyPassword(userExists.password, password);
+    const isPasswordValid = await verifyPassword(
+      userExists.password,
+      data.password,
+    );
     if (!isPasswordValid) throw new BadRequestError('Invalid credentials');
 
-    const accessToken = generateAccessToken(userExists.id, userExists.role[0]);
+    const userRoles = await authRepo.fetchUserRoles(userExists.id);
+    if (!userRoles)
+      throw new AppError(`Could not fetch roles for user: ${userExists.email}`);
+
+    const accessToken = generateAccessToken(userExists.id, userRoles);
     if (!accessToken) {
       throw new AppError('error while creating access token');
     }
 
-    const refreshToken = generateRefreshToken(
-      userExists.id,
-      userExists.role[0],
-    );
+    const refreshToken = generateRefreshToken(userExists.id, userRoles);
     if (!refreshToken) {
       throw new AppError('error while creating refresh token');
     }
@@ -60,18 +84,53 @@ export class AuthService {
 
     const isRefreshTokenAddedToDB = await authRepo.addRefreshTokenToDB(
       userExists.id,
-      REFRESH_TOKEN_EXPIRY,
       hashedToken,
+      REFRESH_TOKEN_EXPIRY,
     );
     if (!isRefreshTokenAddedToDB) {
       throw new AppError('error while storing refresh token to database');
     }
 
-    return { accessToken, refreshToken, role: userExists.role[0] };
+    return { accessToken, refreshToken, roles: userRoles };
   }
 
-  async googleSignIn(userId: string, role: string) {
-    const refreshToken = generateRefreshToken(userId, role);
+  async googleAuth(profile: any) {
+    const email = profile.emails?.[0]?.value;
+
+    let user = await authRepo.findUserWithEmail(email);
+
+    if (!user) {
+      const customerRole = await authRepo.findCustomerRole();
+      if (!customerRole) throw new AppError("Customer role is not set on database");
+
+      user = await authRepo.createCustomer({
+        email,
+        firstname: profile.name?.givenName,
+        lastname: profile.name?.familyName,
+        googleId: profile.id,
+
+        roles: {
+          create: {
+            role: {
+              connect: { id: customerRole.id },
+            },
+          },
+        },
+        password: ""
+      });
+    }
+
+    const userRoles = await authRepo.fetchUserRoles(user.id);
+    return {user, roles:userRoles};
+  }
+
+  async googleSignIn(userId: string, roles: RoleName[]) {
+    const accessToken = generateAccessToken(userId, roles);
+    if (!accessToken) {
+      throw new AppError('error while creating access token');
+    }
+
+    const refreshToken = generateRefreshToken(userId, roles);
     if (!refreshToken) {
       throw new AppError('error while creating refresh token');
     }
@@ -85,14 +144,14 @@ export class AuthService {
 
     const isRefreshTokenAddedToDB = await authRepo.addRefreshTokenToDB(
       userId,
-      REFRESH_TOKEN_EXPIRY,
       hashedToken,
+      REFRESH_TOKEN_EXPIRY,
     );
     if (!isRefreshTokenAddedToDB) {
       throw new AppError('error while storing refresh token to database');
     }
 
-    return { refreshToken };
+    return { refreshToken, accessToken };
   }
 
   async refreshToken(token: string) {
@@ -121,20 +180,18 @@ export class AuthService {
       throw new BadRequestError('User not found');
     }
 
-    await authRepo.rotateRefreshToken(storedToken.id);
+    await authRepo.revokeRefreshToken(storedToken.id);
 
-    const newAccessToken = generateAccessToken(
-      userExists.id,
-      userExists.role[0],
-    );
+    const userRoles = await authRepo.fetchUserRoles(userExists.id);
+    if (!userRoles)
+      throw new AppError(`Could not fetch roles for user: ${userExists.email}`);
+
+    const newAccessToken = generateAccessToken(userExists.id, userRoles);
     if (!newAccessToken) {
       throw new AppError('error while creating access token');
     }
 
-    const newRefreshToken = generateRefreshToken(
-      userExists.id,
-      userExists.role[0],
-    );
+    const newRefreshToken = generateRefreshToken(userExists.id, userRoles);
     if (!newRefreshToken) {
       throw new AppError('error while creating refresh token');
     }
@@ -148,13 +205,13 @@ export class AuthService {
 
     const isRefreshTokenAddedToDB = await authRepo.addRefreshTokenToDB(
       userExists.id,
-      REFRESH_TOKEN_EXPIRY,
       hashedToken,
+      REFRESH_TOKEN_EXPIRY,
     );
     if (!isRefreshTokenAddedToDB) {
       throw new AppError('error while adding refresh token to database');
     }
 
-    return { newAccessToken, newRefreshToken, role: userExists.role[0] };
+    return { newAccessToken, newRefreshToken, roles: userRoles };
   }
 }

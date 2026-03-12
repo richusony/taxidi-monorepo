@@ -1,16 +1,17 @@
 import Dashboard from "@/pages/dashboard/Dashboard";
-import HostListPage from "@/pages/host-list/HostListPage";
+import PartnerListPage from "@/pages/partners-list/PartnerListPage";
 import AdminLayout from "@/components/layouts/AdminLayout";
 import AnalyticsPage from "@/pages/analytics/AnalyticsPage";
-import HostRequestDetailsPage from "@/pages/host-request-details/HostRequestDetailsPage";
+import PartnerRequestDetailsPage from "@/pages/partner-details/PartnerDetailsPage";
+import type { RouteObject } from "react-router-dom";
 
-export const adminRoutes = {
+export const adminRoutes: RouteObject = {
     path: "/",
     element: <AdminLayout />,
     children: [
-        { index: "/", element: <Dashboard /> },
-        { path: "/host-applications", element: <HostListPage/> },
-        { path: "/host-request-details", element: <HostRequestDetailsPage /> },
-        { path: "/analytics", element: <AnalyticsPage /> },
+        { index: true, element: <Dashboard /> },
+        { path: "partners", element: <PartnerListPage/> },
+        { path: "partners/:partnerId", element: <PartnerRequestDetailsPage /> },
+        { path: "analytics", element: <AnalyticsPage /> },
     ]
 };

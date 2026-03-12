@@ -11,12 +11,7 @@ export const signUpSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
-// This type can be used in your Frontend for form handling
-export type SignUpInput = z.infer<typeof signUpSchema>;
-
 export const signInSchema = z.object({
   email: z.email('Invalid email format'),
-  password: z.string().min(8).nonempty('Use proper credentials'),
+  password: z.string().min(3, 'Invalid credentials').nonempty('Use proper credentials'),
 });
-
-export type SignInInput = z.infer<typeof signInSchema>;
