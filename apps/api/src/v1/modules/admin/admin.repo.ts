@@ -32,26 +32,26 @@ export class AdminRepository {
   }
 
   async findPartnerByEmail(email: string) {
-  return prisma.users.findUnique({
-    where: { email },
-    select: {
-      id: true,
-      email: true,
-      firstname: true,
-      lastname: true,
-      phone: true,
-      roles: {
-        select: {
-          role: {
-            select: {
-              name: true,
+    return prisma.users.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        firstname: true,
+        lastname: true,
+        phone: true,
+        roles: {
+          select: {
+            role: {
+              select: {
+                name: true,
+              },
             },
           },
         },
       },
-    },
-  });
-}
+    });
+  }
 
   async findPartnerByPhone(phone: string) {
     return prisma.users.findUnique({
@@ -65,8 +65,14 @@ export class AdminRepository {
     if (!partnerRole) throw new AppError('Partner role is not set on database');
 
     return prisma.users.findMany({
-      include: { roles: { where: { roleId: partnerRole.id } } },
-      omit: { password: true },
+      where: {
+        roles: {
+          some: {
+            role: { is: { name: RoleName.PARTNER } },
+          },
+        },
+      },
+      include: { roles: true, company: true },
     });
   }
 

@@ -1,4 +1,5 @@
 import PartnerRequestTable from '@/components/helpers/PartnerRequestTable';
+import TaxidiLoader from '@/components/loaders';
 import AddPartnerModal from '@/components/modals/AddPartnerModal';
 import { api } from '@/lib/axios.config';
 import { useEffect, useState } from 'react';
@@ -7,6 +8,7 @@ import { FiFilter } from 'react-icons/fi';
 
 const PartnerListPage = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [partnerList, setPartnerList] = useState([]);
 
   const toggleAddPartnerModal = () => {
@@ -15,15 +17,21 @@ const PartnerListPage = () => {
 
   useEffect(() => {
     const handleFetchPartners = async () => {
+      setIsLoading(true);
       try {
         const { data } = await api.get('/admin/partners');
         setPartnerList(data);
+        setIsLoading(false);
       } catch (error) {
         console.error('Something went wrong');
+      } finally {
+        setIsLoading(false);
       }
     };
     handleFetchPartners();
   }, []);
+
+  if (isLoading) return <TaxidiLoader />
 
   return (
     <section className="p-5 bg-black rounded-b-xl min-h-screen text-white">
