@@ -73,7 +73,7 @@ export default function RoleSelectionPage() {
 
   useEffect(() => {
     const handleFetchTokensAndRoles = async () => {
-    if (accessTokenInitialized.current == true) return;
+      if (accessTokenInitialized.current == true) return;
       try {
         const { data } = await api.post('/auth/refresh');
         setAccessToken(data.accessToken);

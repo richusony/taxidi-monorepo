@@ -41,7 +41,9 @@ export class AdminService {
        value from adminRepo.getPartner and cache
       for 60 sec
     */
-    const partner = await cacheWrapper(cacheKey, 60, () => adminRepo.findPartnerById(id));
+    const partner = await cacheWrapper(cacheKey, 60, () =>
+      adminRepo.findPartnerById(id),
+    );
     if (!partner) throw new AppError('Error while fetching partner details');
 
     return partner;
@@ -55,7 +57,9 @@ export class AdminService {
        value from adminRepo.getAllPartners and cache
       for 60 sec
     */
-    const partners = await cacheWrapper(cacheKey, 60, () => adminRepo.getAllPartners());
+    const partners = await cacheWrapper(cacheKey, 60, () =>
+      adminRepo.getAllPartners(),
+    );
     if (!partners) throw new AppError('Error while fetching partners');
 
     return partners;
@@ -83,12 +87,13 @@ export class AdminService {
   }
 
   async addCompany(data: createCompanyDto) {
-    if (!data.company_name) throw new BadRequestError("Company name is required");
-    if (!data.owner) throw new BadRequestError("Please select owner of the company");
+    if (!data.company_name)
+      throw new BadRequestError('Company name is required');
+    if (!data.owner)
+      throw new BadRequestError('Please select owner of the company');
 
     const ownerExists = await adminRepo.findPartnerById(data.owner);
-    if(!ownerExists) throw new NotFoundError("This partner doesn't exist");
-
+    if (!ownerExists) throw new NotFoundError("This partner doesn't exist");
 
     return await adminRepo.addCompany(data.company_name, data.owner);
   }

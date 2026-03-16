@@ -1,6 +1,6 @@
-import z from "zod";
+import z from 'zod';
 
 export interface createCompanyDto {
-    company_name:string;
-    owner: string;
-};
+  company_name: string;
+  owner: string;
+}

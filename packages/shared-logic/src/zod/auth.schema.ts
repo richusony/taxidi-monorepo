@@ -13,5 +13,8 @@ export const signUpSchema = z.object({
 
 export const signInSchema = z.object({
   email: z.email('Invalid email format'),
-  password: z.string().min(3, 'Invalid credentials').nonempty('Use proper credentials'),
+  password: z
+    .string()
+    .min(3, 'Invalid credentials')
+    .nonempty('Use proper credentials'),
 });

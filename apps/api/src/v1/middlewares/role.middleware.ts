@@ -2,19 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import { ForbiddenError, UnAuthorizedError } from '@/utils/errorHandler';
 import { RoleName } from '@taxidi/database';
 
-export function authorizeRoles(...allowedRoles: RoleName[]) {
+export function authorizeRole(allowedRole: RoleName) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {
         throw new UnAuthorizedError('Unauthorized');
       }
 
-      const userRoles: RoleName[] = req.user.roles;
-      const isAllowedRole = userRoles.some(role =>
-        allowedRoles.includes(role)
-      );
+      const userRole: RoleName = req.user.activeRole;
+      // const isAllowedRole = userRoles.some((role) =>
+      //   allowedRoles.includes(role),
+      // );
 
-      if (!isAllowedRole) {
+      if (allowedRole !== userRole) {
         throw new ForbiddenError('Forbidden: You are not allowed to do this');
       }
 

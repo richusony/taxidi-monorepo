@@ -6,6 +6,7 @@ import { RoleName } from '@taxidi/database';
 export interface JwtPayload {
   userId: string;
   roles: RoleName[];
+  activeRole: RoleName;
 }
 
 export function authMiddleware(

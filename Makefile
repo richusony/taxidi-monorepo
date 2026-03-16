@@ -19,3 +19,13 @@ build:
 
 logs:
 	$(APP) logs -f
+
+clear-build:
+	rm -r apps/**/node_modules
+	rm -r apps/**/.turbo
+	rm -r apps/**/.next
+	rm -r apps/**/dist
+
+	rm -r packages/**/node_modules
+	rm -r packages/**/dist
+	rm -r packages/**/.turbo

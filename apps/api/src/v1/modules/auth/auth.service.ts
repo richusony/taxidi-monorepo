@@ -10,7 +10,11 @@ import {
   hashToken,
   isRefreshTokenExpired,
 } from '@/utils/token-helper';
-import { AppError, BadRequestError } from '@/utils/errorHandler';
+import {
+  AppError,
+  BadRequestError,
+  ForbiddenError,
+} from '@/utils/errorHandler';
 import { SignInInputDto, SignUpInputDto } from './auth.dto';
 import { RoleName } from '@taxidi/database';
 
@@ -65,7 +69,7 @@ export class AuthService {
     if (!userRoles)
       throw new AppError(`Could not fetch roles for user: ${userExists.email}`);
 
-    const accessToken = generateAccessToken(userExists.id, userRoles);
+    const accessToken = generateAccessToken(userExists.id, userRoles, null);
     if (!accessToken) {
       throw new AppError('error while creating access token');
     }
@@ -126,7 +130,7 @@ export class AuthService {
   }
 
   async googleSignIn(userId: string, roles: RoleName[]) {
-    const accessToken = generateAccessToken(userId, roles);
+    const accessToken = generateAccessToken(userId, roles, null);
     if (!accessToken) {
       throw new AppError('error while creating access token');
     }
@@ -155,7 +159,7 @@ export class AuthService {
     return { refreshToken, accessToken };
   }
 
-  async refreshToken(token: string) {
+  async refreshToken(token: string, activeRole: RoleName) {
     const hashed = hashToken(token);
     if (!hashed || hashed == '') {
       throw new AppError('error while hashing refresh token');
@@ -189,7 +193,15 @@ export class AuthService {
     if (!userRoles)
       throw new AppError(`Could not fetch roles for user: ${userExists.email}`);
 
-    const newAccessToken = generateAccessToken(userExists.id, userRoles);
+    if (!userRoles.includes(activeRole)) {
+      throw new ForbiddenError('You are not allowed to do this');
+    }
+
+    const newAccessToken = generateAccessToken(
+      userExists.id,
+      userRoles,
+      activeRole,
+    );
     if (!newAccessToken) {
       throw new AppError('error while creating access token');
     }

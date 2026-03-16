@@ -19,20 +19,16 @@ router.post(
   authHandler.signInWithEmailAndPassword,
 );
 
-router.get(
-  '/google',
-  (req, res, next) => {
-    const state = typeof req.query.state === 'string'
-      ? req.query.state
-      : 'taxidi-web';
+router.get('/google', (req, res, next) => {
+  const state =
+    typeof req.query.state === 'string' ? req.query.state : 'taxidi-web';
 
-    passport.authenticate('google', {
-      scope: ['profile', 'email'],
-      state,
-      session: false,
-    })(req, res, next);
-  }
-);
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    state,
+    session: false,
+  })(req, res, next);
+});
 
 router.get(
   '/google/callback',

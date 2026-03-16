@@ -4,13 +4,13 @@ import pino from 'pino';
 
 let redis: Redis;
 const logger = pino({
-    level: 'info'
-  })
+  level: 'info',
+});
 export function getRedis() {
   const REDIS_HOST = process.env.REDIS_HOST;
   const REDIS_PORT = process.env.REDIS_PORT;
 
-  if (REDIS_HOST == undefined || REDIS_PORT == undefined){
+  if (REDIS_HOST == undefined || REDIS_PORT == undefined) {
     const err = 'Redis Environment variables is not set';
     logger.error(err);
     throw new Error(err);

@@ -16,7 +16,7 @@
 //         if (!email) {
 //           return done(null, false);
 //         }
-        
+
 //         const user = await prisma.users.upsert({
 //           where: { email },
 //           update: {},
@@ -42,12 +42,11 @@
 
 // export default passport;
 
-
 // ========================= Testing Google Auth =====================================
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { AuthService } from "@/v1/modules/auth/auth.service";
-import { AppError } from "@/utils/errorHandler";
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { AuthService } from '@/v1/modules/auth/auth.service';
+import { AppError } from '@/utils/errorHandler';
 
 const authService = new AuthService();
 
@@ -60,11 +59,11 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const {user, roles} = await authService.googleAuth(profile);
-        done(null, { userId: user.id, roles: roles});
+        const { user, roles } = await authService.googleAuth(profile);
+        done(null, { userId: user.id, roles: roles });
       } catch (error) {
         done(error as Error, undefined);
       }
-    }
-  )
+    },
+  ),
 );

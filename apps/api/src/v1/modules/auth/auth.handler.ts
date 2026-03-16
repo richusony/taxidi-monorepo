@@ -71,7 +71,7 @@ export class AuthHandler {
 
       // user has multiple roles
       if (roles.length > 1) {
-        return res.redirect(`${ROLE_REDIRECT['AUTH']}/login-as`)
+        return res.redirect(`${ROLE_REDIRECT['AUTH']}/login-as`);
       }
 
       return res.redirect(ROLE_REDIRECT[roles[0]]);
@@ -87,13 +87,14 @@ export class AuthHandler {
 
   async refreshSession(req: Request, res: Response) {
     const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
+    const activeRole = req.headers['x-active-role'] as RoleName;
 
     if (!refreshToken) {
       throw new UnAuthorizedError('Missing token');
     }
 
     const { newAccessToken, newRefreshToken, roles } =
-      await authService.refreshToken(refreshToken);
+      await authService.refreshToken(refreshToken, activeRole);
 
     const authMode = req.headers['x-auth-mode'];
 

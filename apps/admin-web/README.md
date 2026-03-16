@@ -3,6 +3,7 @@
 A standalone admin panel for Taxidi — built with **React**, **Vite**, **TypeScript**, and **TailwindCSS**, using **Bun** as the package manager.
 
 ## 🛠 Tech Stack
+
 - React (18+)
 - Vite
 - TypeScript
@@ -11,8 +12,10 @@ A standalone admin panel for Taxidi — built with **React**, **Vite**, **TypeSc
 - Bun (package manager + runtime)
 
 ## 🚀 Setup & Commands
+
 ```bash
 bun install
 bun run dev        # start development server
 bun run build      # production build
 bun run preview    # preview build
+```

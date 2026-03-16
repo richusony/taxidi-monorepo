@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/store';
 export const api = createApiClient({
   baseURL: import.meta.env.VITE_API_URL,
   authMode: 'cookie',
+  activeRole: 'ADMIN',
   getAccessToken: () => {
     if (typeof window === 'undefined') return null;
     return useAuthStore.getState().accessToken;
