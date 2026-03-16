@@ -4,8 +4,8 @@ import { ZodSchema } from 'zod';
 export const validationMiddleware =
   (schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
-
     if (!result.success) {
+      console.log('reached here');
       const formattedErrors = result.error.issues.map((issue) => ({
         field: issue.path.join('.'),
         message: issue.message,

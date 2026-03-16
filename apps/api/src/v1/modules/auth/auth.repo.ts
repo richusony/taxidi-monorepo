@@ -1,51 +1,78 @@
 import { prisma } from '@/lib/prisma';
-import { Role, Users } from '@taxidi/database';
+import { Prisma, RoleName } from '@taxidi/database';
 
 export class AuthRepository {
   async findUserWithUserId(userId: string) {
-    return await prisma.users.findUnique({ where: { id: userId } });
+    return prisma.users.findUnique({ where: { id: userId } });
   }
 
   async findUserWithEmail(email: string) {
-    return await prisma.users.findUnique({ where: { email } });
+    return prisma.users.findUnique({ where: { email } });
   }
 
-  async createCustomer(user: Users) {
-    return await prisma.users.create({
+  async createCustomer(data: Prisma.UsersCreateInput) {
+    return prisma.users.create({ data });
+  }
+
+  async findCustomerRole() {
+    return prisma.role.findUnique({ where: { name: RoleName.CUSTOMER } });
+  }
+
+  async assignRoleToUser(userId: string, roleName: RoleName) {
+    const role = await prisma.role.findUnique({
+      where: { name: roleName },
+    });
+
+    if (!role) throw new Error('Role not found');
+
+    return prisma.userRole.create({
       data: {
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        password: user.password,
-        role: { set: [Role.CUSTOMER] },
+        userId,
+        roleId: role.id,
       },
     });
   }
 
-  async addRefreshTokenToDB(userId: string, expiry: Date, hashedToken: string) {
+  async fetchUserRoles(userId: string) {
+    const roles = await prisma.userRole.findMany({
+      where: { userId },
+      select: {
+        role: {
+          select: { name: true },
+        },
+      },
+    });
+
+    return roles.map((r) => r.role.name);
+  }
+
+  async addRefreshTokenToDB(
+    userId: string,
+    tokenHash: string,
+    tokenExpiry: Date,
+  ) {
     // Optional: Limit active sessions
-    // await prisma.refreshToken.deleteMany({
+    // prisma.refreshToken.deleteMany({
     //   where: { userId: userExists.id },
     // });
 
-    return await prisma.refreshToken.create({
+    return prisma.refreshToken.create({
       data: {
-        tokenHash: hashedToken,
-        userId: userId,
-        expiresAt: expiry,
+        userId,
+        tokenHash,
+        expiresAt: tokenExpiry,
       },
     });
   }
 
   async findRefreshToken(hashedToken: string) {
-    return await prisma.refreshToken.findUnique({
+    return prisma.refreshToken.findUnique({
       where: { tokenHash: hashedToken },
     });
   }
 
-  async rotateRefreshToken(tokenId: string) {
-    // 🔥 ROTATION
-    return await prisma.refreshToken.update({
+  async revokeRefreshToken(tokenId: string) {
+    return prisma.refreshToken.update({
       where: { id: tokenId },
       data: { revoked: true },
     });
@@ -53,7 +80,7 @@ export class AuthRepository {
 
   async revokeAllRefreshTokens(userId: string) {
     // 🚨 Reuse attack → revoke ALL sessions
-    return await prisma.refreshToken.updateMany({
+    return prisma.refreshToken.updateMany({
       where: { userId },
       data: { revoked: true },
     });

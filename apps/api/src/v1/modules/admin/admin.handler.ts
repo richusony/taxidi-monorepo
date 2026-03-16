@@ -17,6 +17,15 @@ export class AdminHandler {
     }
   }
 
+  async handleGetPartnerDetails(req: Request, res: Response) {
+    const partnerId = req.params.id as string;
+    try {
+      const partner = await adminService.getPartner(partnerId);
+      return res.status(200).json(partner);
+    } catch (error: any) {
+      throw error;
+    }
+  }
   async handleGetAllPartners(req: Request, res: Response) {
     try {
       const partners = await adminService.getAllPartners();

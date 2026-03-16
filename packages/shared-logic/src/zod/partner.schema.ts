@@ -9,6 +9,3 @@ export const partnerSchema = z.object({
   //     .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
   //     .optional()
 });
-
-// This type can be used in your Frontend for form handling
-export type PartnerSchema = z.infer<typeof partnerSchema>;

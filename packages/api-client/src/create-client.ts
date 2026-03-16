@@ -3,6 +3,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 export const createApiClient = (config?: {
   baseURL?: string;
   authMode?: string;
+  activeRole?: string;
   getAccessToken?: () => string | null;
   onUnauthorized?: () => void;
 }) => {
@@ -22,6 +23,10 @@ export const createApiClient = (config?: {
 
     if (token) {
       req.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (config?.activeRole) {
+      req.headers.set('x-active-role', config.activeRole);
     }
 
     return req;
