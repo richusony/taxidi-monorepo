@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useAuthStore } from '../store/store';
 import { api } from '../lib/axios.config';
+import TaxidiLoader from '@/components/loaders';
 
 export function AuthInitializer({ children }: { children: React.ReactNode }) {
   const hasInitialized = useRef(false);
@@ -27,7 +28,7 @@ export function AuthInitializer({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (!isInitialized) {
-    return <div>Loading...</div>;
+    return <TaxidiLoader />;
   }
 
   return children;
