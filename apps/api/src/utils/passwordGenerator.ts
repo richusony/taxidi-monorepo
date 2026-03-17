@@ -5,9 +5,10 @@ export async function generatePasswordHash(password: string) {
 }
 
 export async function verifyPassword(
-  dbPassword: string,
+  dbPassword: string|null,
   inputPassword: string,
 ) {
+  if (!dbPassword) return false;
   return await argon2.verify(dbPassword, inputPassword);
 }
 

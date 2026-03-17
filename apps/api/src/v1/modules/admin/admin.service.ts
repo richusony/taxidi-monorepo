@@ -1,5 +1,5 @@
-import { Address, RentalCompany, Role, Users } from '@taxidi/database';
-import { cacheWrapper } from '@taxidi/redis-cache';
+import { Address, RoleName, Users } from '@taxidi/database';
+import { cacheWrapper, deleteCache } from '@taxidi/redis-cache';
 import { AdminRepository } from '@/v1/modules/admin/admin.repo';
 import {
   generatePasswordHash,
@@ -15,9 +15,24 @@ export class AdminService {
     const partnerExistsWithEmail = await adminRepo.findPartnerByEmail(
       partner.email,
     );
-    console.log(partner);
-    if (partnerExistsWithEmail)
-      throw new BadRequestError('Partner with this email already exist');
+
+    if (partnerExistsWithEmail) {
+      const roles = partnerExistsWithEmail.roles;
+      roles.forEach((r) => {
+        if (r.role.name === RoleName.PARTNER)
+          throw new BadRequestError('Partner with this email already exist');
+      });
+
+      const assignPartnerRoleToUser = await adminRepo.assignRoleToUser(
+        partnerExistsWithEmail.id,
+        RoleName.PARTNER,
+      );
+      if (!assignPartnerRoleToUser)
+        throw new AppError('Error while assigning PARTNER role for user');
+
+      await deleteCache('partners:list');
+      return partnerExistsWithEmail;
+    }
 
     const generatedPassword = generateStrongPassword();
     if (!generatedPassword)
@@ -28,9 +43,9 @@ export class AdminService {
       throw new AppError('Error while hashing password for partner account');
 
     partner.password = hashedPassword;
-    const adminDetails = await adminRepo.addPartnerToDB(partner);
-    if (!adminDetails) throw new AppError('Error while creating partner');
-    return adminDetails;
+    const partnerDetails = await adminRepo.addPartnerToDB(partner);
+    if (!partnerDetails) throw new AppError('Error while creating partner');
+    return partnerDetails;
   }
 
   async getPartner(id: string) {
@@ -82,7 +97,7 @@ export class AdminService {
       if (phoneExists)
         throw new BadRequestError('This phone number is already taken');
     }
-
+    await deleteCache('partners:list');
     return await adminRepo.updatePartner(partnerExists.id, partner);
   }
 

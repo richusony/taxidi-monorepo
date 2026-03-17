@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { accessTokenVerfier } from '@/utils/token-helper';
-import { AppError, UnAuthorizedError } from '@/utils/errorHandler';
+import { UnAuthorizedError } from '@/utils/errorHandler';
 import { RoleName } from '@taxidi/database';
 
 export interface JwtPayload {

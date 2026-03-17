@@ -10,7 +10,7 @@ router.use(authorizeRole(RoleName.PARTNER));
 
 router.get('/', (req, res) => res.status(200).json({ message: 'partner api' }));
 
-router.route('/vehicles')
-.get()
+// router.route('/vehicles')
+// .get()
 
 export default router;

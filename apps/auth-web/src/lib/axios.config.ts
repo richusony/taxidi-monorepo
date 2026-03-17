@@ -4,6 +4,7 @@ import { useAuthStore } from 'src/store/auth.store';
 export const api = createApiClient({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   authMode: 'cookie',
+  activeRole: 'CUSTOMER',
   getAccessToken: () => {
     if (typeof window === 'undefined') return null;
     return useAuthStore.getState().accessToken;

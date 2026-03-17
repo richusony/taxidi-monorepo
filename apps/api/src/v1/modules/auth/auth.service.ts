@@ -194,7 +194,7 @@ export class AuthService {
       throw new AppError(`Could not fetch roles for user: ${userExists.email}`);
 
     if (!userRoles.includes(activeRole)) {
-      throw new ForbiddenError('You are not allowed to do this');
+      throw new ForbiddenError('You are not allowed to access this');
     }
 
     const newAccessToken = generateAccessToken(
