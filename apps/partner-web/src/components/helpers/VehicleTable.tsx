@@ -12,7 +12,7 @@ interface PartnerType {
   updatedAt: string;
 }
 
-const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
+const VehicleTable = ({ vehicles }: { vehicles: PartnerType[] }) => {
   const headerTabs = ['Name', 'Email', 'Phone', 'Place', 'Status', 'Action'];
 
   return (
@@ -33,9 +33,9 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
 
       <div className="border-b">
         <ul className="px-5">
-          {partnerList.map((partner) => (
+          {vehicles.map((v) => (
             <li
-              key={partner.id}
+              key={v.id}
               className="my-8 grid grid-cols-6 gap-x-2 items-center text-sm"
             >
               <div className="flex gap-x-2 items-center">
@@ -43,18 +43,18 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
                   <img
                     className="rounded-full w-full h-full object-cover"
                     src={'https://i.pravatar.cc/150?img=12'}
-                    alt={partner.firstname}
+                    alt={v.firstname}
                   />
                 </div>
-                <h6 className="text-sm font-semibold">{`${partner.firstname}  ${partner.lastname == null ? '' : partner.lastname}`}</h6>
+                <h6 className="text-sm font-semibold">{`${v.firstname}  ${v.lastname == null ? '' : v.lastname}`}</h6>
               </div>
 
               <div>
-                <span>{partner.email}</span>
+                <span>{v.email}</span>
               </div>
 
               <div>
-                <span>{partner.phone}</span>
+                <span>{v.phone}</span>
               </div>
 
               <div>
@@ -62,11 +62,11 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
               </div>
 
               <div>
-                {partner.id == 'pending' ? (
+                {v.id == 'pending' ? (
                   <span className="rounded-full px-2 py-1 bg-amber-200 text-sm text-yellow-800 font-semibold">
                     Pending
                   </span>
-                ) : partner.id == 'cancelled' ? (
+                ) : v.id == 'cancelled' ? (
                   <span className="rounded-full px-2 py-1 bg-red-200 text-sm text-red-800 font-semibold">
                     Cancelled
                   </span>
@@ -79,7 +79,7 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
 
               <div className="flex gap-x-2">
                 <Link
-                  to={`/partners/${partner.id}`}
+                  to={`/partners/${v.id}`}
                   className="p-2 text-lg hover:bg-zinc-600 hover:font-semibold rounded"
                 >
                   <BiPencil />
@@ -109,4 +109,4 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
   );
 };
 
-export default PartnerTable;
+export default VehicleTable;

@@ -1,7 +1,7 @@
-import { PrismaClient } from '../src/generated/prisma/client';
+import { PrismaClient } from '../../src/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import argon2 from 'argon2';
-import { RoleName } from '../src/generated/prisma/client';
+import { RoleName } from '../../src/generated/prisma/client';
 
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) throw new Error('NODE_ENV is not set');
@@ -15,7 +15,7 @@ const adapter = new PrismaPg({
 
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
+export async function seedUsers() {
   await prisma.$transaction(async (tx) => {
     /* ------------------------------------------------ */
     /* 1️⃣ Seed Roles                                   */
@@ -191,12 +191,12 @@ async function main() {
   console.log('🌱 Database seeded successfully');
 }
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+// main()
+//   .then(async () => {
+//     await prisma.$disconnect();
+//   })
+//   .catch(async (e) => {
+//     console.error(e);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   });

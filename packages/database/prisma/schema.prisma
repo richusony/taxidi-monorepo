@@ -9,6 +9,10 @@ datasource db {
   provider = "postgresql"
 }
 
+///////////////////////
+//// USERS / AUTH
+///////////////////////
+
 model Users {
   id        String  @id @default(uuid())
   firstname String
@@ -55,7 +59,7 @@ model UserRole {
   roleId String
 
   user Users @relation(fields: [userId], references: [id])
-  role Role @relation(fields: [roleId], references: [id])
+  role Role  @relation(fields: [roleId], references: [id])
 
   @@id([userId, roleId])
   @@index([roleId])
@@ -73,17 +77,23 @@ model RolePermission {
   @@id([roleId, permissionId])
   @@index([permissionId])
 
-@@map("role_permissions")
+  @@map("role_permissions")
 }
+
+///////////////////////
+//// COMPANY
+///////////////////////
 
 model RentalCompany {
   id                  String  @id @default(uuid())
   company_name        String
   owner_id            String  @unique
   owner               Users   @relation(fields: [owner_id], references: [id])
+
   company_location_id String?  @unique
   company_location    Address? @relation(fields: [company_location_id], references: [id])
-  is_blocked          Boolean @default(false)
+
+  is_blocked Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,18 +101,88 @@ model RentalCompany {
   @@map("rental_company")
 }
 
+///////////////////////
+//// VEHICLE MASTER
+///////////////////////
+
+model VehicleType {
+  id   String @id @default(uuid())
+  name String @unique
+
+  brands VehicleBrand[]
+  models VehicleModel[]
+
+  @@map("vehicle_types")
+}
+
+model VehicleBrand {
+  id   String @id @default(uuid())
+  name String
+
+  type_id String
+  type VehicleType @relation(fields: [type_id], references: [id])
+
+  models VehicleModel[]
+
+  @@unique([name, type_id])
+  @@map("vehicle_brands")
+}
+
+model VehicleModel {
+  id   String @id @default(uuid())
+  name String
+
+  brand_id String
+  brand VehicleBrand @relation(fields: [brand_id], references: [id])
+
+  type_id String
+  type VehicleType @relation(fields: [type_id], references: [id])
+
+  body_type BodyType?
+  seats     Int?
+  fuel_type String?
+
+  variants VehicleVariant[]
+
+  @@unique([name, brand_id])
+  @@map("vehicle_models")
+}
+
+model VehicleVariant {
+  id   String @id @default(uuid())
+  name String
+
+  model_id String
+  model VehicleModel @relation(fields: [model_id], references: [id])
+
+  transmission String?
+  engine       String?
+  mileage      Float?
+  seats        Int?
+  fuel_type    String?
+
+  vehicles Vehicles[]
+
+  @@unique([name, model_id])
+  @@map("vehicle_variants")
+}
+
+///////////////////////
+//// PARTNER VEHICLES
+///////////////////////
+
 model Vehicles {
   id String @id @default(uuid())
 
-  brand String
-  model String
+  variant_id String
+  variant VehicleVariant @relation(fields: [variant_id], references: [id])
 
   kilometers_driven Int
   vehicle_age       Int
   mileage           Float
 
   owner_id String
-  owner    Users  @relation(fields: [owner_id], references: [id])
+  owner Users @relation(fields: [owner_id], references: [id])
 
   is_blocked Boolean @default(false)
 
@@ -110,29 +190,33 @@ model Vehicles {
   price_per_week_subunits Int
 
   pickup_location_id String
-  pickup_location    Address @relation(fields: [pickup_location_id], references: [id])
+  pickup_location Address @relation(fields: [pickup_location_id], references: [id])
 
   current_status VehicleStatus @default(AVAILABLE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([owner_id, pickup_location_id])
+  @@index([owner_id, pickup_location_id, variant_id])
   @@map("vehicles")
 }
 
+///////////////////////
+//// ADDRESS
+///////////////////////
+
 model Address {
-  id               String     @id @default(uuid())
+  id               String @id @default(uuid())
   address_line_one String
   address_line_two String?
-  address_tag      AddressTag @default(COMPANY)
-  latitude         Float?
-  longitude        Float?
+
+  address_tag AddressTag @default(COMPANY)
+
+  latitude  Float?
+  longitude Float?
 
   company RentalCompany?
-
-  vehicles   Vehicles[]
-
+  vehicles Vehicles[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -140,25 +224,60 @@ model Address {
   @@map("address")
 }
 
+///////////////////////
+//// TOKENS
+///////////////////////
+
 model RefreshToken {
-  id         String   @id @default(uuid())
-  tokenHash  String   @unique
-  userId     String
-  user       Users    @relation(fields: [userId], references: [id])
-  expiresAt  DateTime
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+
+  userId String
+  user   Users @relation(fields: [userId], references: [id])
+
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+
   createdAt DateTime @default(now())
-  revoked    Boolean  @default(false)
 
   @@index([tokenHash])
   @@map("refresh_token")
 }
 
-// enums
+///////////////////////
+//// ENUMS
+///////////////////////
 
 enum RoleName {
   CUSTOMER
   PARTNER
   ADMIN
+}
+
+enum BodyType {
+  HATCHBACK
+  SEDAN
+  SUV
+  MUV
+  COUPE
+  CONVERTIBLE
+  WAGON
+  VAN
+  MINIVAN
+  PICKUP
+  TRUCK
+  BUS
+  AUTO_RICKSHAW
+
+  MOTORCYCLE
+  SCOOTER
+  MOPED
+
+  ELECTRIC_CAR
+  ELECTRIC_BIKE
+  ELECTRIC_SCOOTER
+
+  OTHER
 }
 
 enum VehicleStatus {

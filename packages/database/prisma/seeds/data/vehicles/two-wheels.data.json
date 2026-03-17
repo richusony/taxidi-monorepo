@@ -1,0 +1,49 @@
+{
+  "name": "2W",
+  "brands": [
+    {
+      "name": "Honda",
+      "models": [
+        {
+          "name": "Activa",
+          "bodyType": "SCOOTER",
+          "fuelType": "PETROL",
+          "seats": 2,
+          "variants": ["Activa 6G", "Activa 125"]
+        }
+      ]
+    },
+    {
+      "name": "TVS",
+      "models": [
+        {
+          "name": "Apache",
+          "bodyType": "MOTORCYCLE",
+          "fuelType": "PETROL",
+          "seats": 2,
+          "variants": ["RTR 160", "RTR 180", "RTR 200"]
+        },
+        {
+          "name": "Jupiter",
+          "bodyType": "SCOOTER",
+          "fuelType": "PETROL",
+          "seats": 2,
+          "variants": ["Standard", "ZX", "Classic"]
+        }
+      ]
+    },
+
+    {
+      "name": "Bajaj",
+      "models": [
+        {
+          "name": "Pulsar",
+          "bodyType": "MOTORCYCLE",
+          "fuelType": "PETROL",
+          "seats": 2,
+          "variants": ["125", "150", "180", "220"]
+        }
+      ]
+    }
+  ]
+}
