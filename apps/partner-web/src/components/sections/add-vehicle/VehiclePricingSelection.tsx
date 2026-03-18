@@ -1,6 +1,9 @@
-import type { VehicleAddWizardType } from "@/pages/add-vehicle/page";
+import type { VehicleAddWizardType } from '@/pages/add-vehicle/page';
 
-const VehiclePricingSelction = ({ nextStep, prevStep }: VehicleAddWizardType) => {
+const VehiclePricingSelction = ({
+  nextStep,
+  prevStep,
+}: VehicleAddWizardType) => {
   return (
     <section>
       <h3>Select Vehicle Pricing</h3>

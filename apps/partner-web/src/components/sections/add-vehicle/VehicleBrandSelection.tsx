@@ -1,4 +1,4 @@
-import type { VehicleAddWizardType } from "@/pages/add-vehicle/page";
+import type { VehicleAddWizardType } from '@/pages/add-vehicle/page';
 
 const VehicleBrandSelction = ({ nextStep, prevStep }: VehicleAddWizardType) => {
   return (

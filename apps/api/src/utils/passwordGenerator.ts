@@ -5,7 +5,7 @@ export async function generatePasswordHash(password: string) {
 }
 
 export async function verifyPassword(
-  dbPassword: string|null,
+  dbPassword: string | null,
   inputPassword: string,
 ) {
   if (!dbPassword) return false;

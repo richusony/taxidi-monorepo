@@ -12,6 +12,6 @@ export const partnerRoutes: RouteObject = {
     { index: true, element: <Dashboard /> },
     { path: 'analytics', element: <AnalyticsPage /> },
     { path: 'manage-vehicles', element: <VehicleListPage /> },
-    { path: 'add-vehicle', element: <AddVehiclePage />}
+    { path: 'add-vehicle', element: <AddVehiclePage /> },
   ],
 };

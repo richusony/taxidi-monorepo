@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
 import { LoaderCircle } from 'lucide-react';
 
-const TaxidiLoader = ({ loadingText="Loading dashboard..." }: { loadingText?: string }) => {
+const TaxidiLoader = ({
+  loadingText = 'Loading dashboard...',
+}: {
+  loadingText?: string;
+}) => {
   return (
     <div className="fixed inset-0 bg-[#0b0b0c] flex items-center justify-center z-50">
       <div className="flex flex-col items-center gap-6">

@@ -1,3 +1,1 @@
-export interface VehicleCreateInputDto {
-    
-}
+export interface VehicleCreateInputDto {}

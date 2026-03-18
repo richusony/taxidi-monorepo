@@ -14,7 +14,11 @@ interface NavLinks {
   pathIcon: ReactElement;
 }
 
-const PartnerSidePanel = ({ isSidePanelOpen }: { isSidePanelOpen: boolean }) => {
+const PartnerSidePanel = ({
+  isSidePanelOpen,
+}: {
+  isSidePanelOpen: boolean;
+}) => {
   const navigate = useNavigate();
   // const isSmallScreen = useIsSmallScreen();
   const navLinks: NavLinks[] = [

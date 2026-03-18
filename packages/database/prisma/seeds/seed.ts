@@ -1,5 +1,5 @@
-import { seedUsers } from "./user.seed";
-import { seedVehicles } from "./vehicle.seed";
+import { seedUsers } from './user.seed';
+import { seedVehicles } from './vehicle.seed';
 
 async function main() {
   await seedUsers();
@@ -8,7 +8,7 @@ async function main() {
 
 main()
   .then(() => {
-    console.log("✅ All seeds done");
+    console.log('✅ All seeds done');
   })
   .catch((e) => {
     console.error(e);
