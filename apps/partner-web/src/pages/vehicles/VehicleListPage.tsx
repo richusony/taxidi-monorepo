@@ -1,17 +1,18 @@
 import VehicleTable from '@/components/helpers/VehicleTable';
 import TaxidiLoader from '@/components/loaders';
-import AddPartnerModal from '@/components/modals/AddPartnerModal';
+import AddPartnerModal from '@/components/modals/AddVehicleModal';
 import { api } from '@/lib/axios.config';
 import { useEffect, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { FiFilter } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const VehicleListPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [vehicles, setVehicles] = useState([]);
 
-  const toggleAddPartnerModal = () => {
+  const toggleAddVehicleModal = () => {
     setOpenModal((prev) => !prev);
   };
 
@@ -31,20 +32,20 @@ const VehicleListPage = () => {
     handleFetchPartners();
   }, []);
 
-  if (isLoading) return <TaxidiLoader />;
+  if (isLoading) return <TaxidiLoader loadingText="Loading Vehicles..." />;
 
   return (
     <section className="p-5 bg-black rounded-b-xl min-h-screen text-white">
-      {openModal && <AddPartnerModal onClose={toggleAddPartnerModal} />}
+      {openModal && <AddPartnerModal onClose={toggleAddVehicleModal} />}
 
       <div className="flex justify-between items-center text-white">
-        <h1 className="text-xl font-semibold">Applications</h1>
-        <button
-          onClick={toggleAddPartnerModal}
+        <h1 className="text-xl font-semibold">My Vehicles</h1>
+        <Link
+          to={'/add-vehicle'}
           className="px-6 py-2 bg-zinc-700/50 rounded-full"
         >
-          + Add Partner
-        </button>
+          + Add Vehicle
+        </Link>
       </div>
 
       <div className="mt-5 flex justify-between">
