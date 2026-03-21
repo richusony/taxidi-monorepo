@@ -1,7 +1,7 @@
+import { type JSX } from 'react';
 import { Car, Motorbike, Truck } from 'lucide-react';
 import { TbBus, TbCar, TbCarSuv } from 'react-icons/tb';
 import { useVehicleAddStore } from '@/store/vehicle.store';
-import { type JSX, type SyntheticEvent } from 'react';
 import VehicleConfirm from '@/components/sections/add-vehicle/VehicleConfirm';
 import ProgressTracking from '@/components/sections/add-vehicle/ProgressTracking';
 import VehicleTypeSelection from '@/components/sections/add-vehicle/VehicleTypeSelection';
@@ -11,11 +11,6 @@ import VehicleDetailsSelction from '@/components/sections/add-vehicle/VehicleDet
 import VehiclePricingSelction from '@/components/sections/add-vehicle/VehiclePricingSelection';
 import VehicleVariantSelction from '@/components/sections/add-vehicle/VehicleVariantSelection';
 import VehicleLocationSelction from '@/components/sections/add-vehicle/VehicleLocationSelection';
-
-export interface VehicleAddWizardType {
-  nextStep: (e: SyntheticEvent) => void;
-  prevStep: (e: SyntheticEvent) => void;
-}
 
 export interface VehicleTypesType {
   type: string;
@@ -78,14 +73,14 @@ const AddVehiclePage = () => {
     'CONFIRM',
   ];
   return (
-    <main className="bg-black min-h-screen py-5 px-8 text-white">
+    <section className="bg-black min-h-screen py-5 px-8 text-white">
       <h1 className="mt-1 text-2xl font-semibold">List a New Vehicle</h1>
       <p className="mt-1 text-sm text-white/50">
         Complete the steps below to add your vehicle to the platform.
       </p>
 
       <ProgressTracking steps={addVehicleSteps} currentStep={currentStep} />
-      <section>
+      <div>
         {currentStep === 0 && (
           <VehicleTypeSelection vehicleTypes={vehicleTypes} />
         )}
@@ -96,8 +91,8 @@ const AddVehiclePage = () => {
         {currentStep === 5 && <VehiclePricingSelction />}
         {currentStep === 6 && <VehicleLocationSelction />}
         {currentStep === 7 && <VehicleConfirm />}
-      </section>
-    </main>
+      </div>
+    </section>
   );
 };
 

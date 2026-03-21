@@ -1,20 +1,20 @@
 import { useVehicleAddStore } from '@/store/vehicle.store';
-import { ProgressNextButton, ProgressPrevButton } from './ProgressButtons';
+import SelectionWrapperUI from './SelectionWrapperUI';
 
 const VehicleLocationSelction = () => {
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const selectedLocation = useVehicleAddStore((s) => s.data.location);
   return (
-    <section>
-      <h3>Select Vehicle Location</h3>
-      <form>
-        <div className="flex gap-x-3">
-          <ProgressPrevButton prevStep={prevStep} />
-          <ProgressNextButton selected={selectedLocation} nextStep={nextStep} />
-        </div>
-      </form>
-    </section>
+    <SelectionWrapperUI
+      nextBtn={nextStep}
+      prevBtn={prevStep}
+      selected={selectedLocation}
+      wrapperTitle="Pin your location"
+      wrapperDescription="Click or tap the map to drop a pin. Drag to adjust. Your exact coordinates are saved privately."
+    >
+      <div></div>
+    </SelectionWrapperUI>
   );
 };
 

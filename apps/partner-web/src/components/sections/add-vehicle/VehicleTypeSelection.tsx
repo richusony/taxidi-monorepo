@@ -1,6 +1,6 @@
 import type { VehicleTypesType } from '@/pages/add-vehicle/page';
 import { useVehicleAddStore } from '@/store/vehicle.store';
-import { ProgressNextButton } from '@/components/sections/add-vehicle/ProgressButtons';
+import SelectionWrapperUI from './SelectionWrapperUI';
 
 interface TypesProps {
   vehicleTypes: VehicleTypesType[];
@@ -17,13 +17,14 @@ const VehicleTypeSelection = ({ vehicleTypes }: TypesProps) => {
     });
   };
   return (
-    <section className="rounded-2xl border border-white/10 p-8 bg-white/10 ">
-      <h3 className="font-semibold">What type of vehicle?</h3>
-      <p className="mt-1 text-sm text-white/40">
-        Select the category that best describes your vehicle.
-      </p>
-      <hr className="my-5 text-white/10" />
-
+    <SelectionWrapperUI
+      isPrevEnabled={false}
+      nextBtn={nextStep}
+      selected={selectedVehicleType}
+      wrapperTitle="What type of vehicle?"
+      wrapperDescription="Select the category that best describes your vehicle."
+      prevBtn={() => {}}
+    >
       <div className="flex flex-wrap gap-5">
         {vehicleTypes.map((vt, index) => (
           <VehicleTypeComponent
@@ -34,15 +35,7 @@ const VehicleTypeSelection = ({ vehicleTypes }: TypesProps) => {
           />
         ))}
       </div>
-
-      <hr className="my-5 text-white/10" />
-      <div className="flex justify-end">
-        <ProgressNextButton
-          selected={selectedVehicleType}
-          nextStep={nextStep}
-        />
-      </div>
-    </section>
+    </SelectionWrapperUI>
   );
 };
 

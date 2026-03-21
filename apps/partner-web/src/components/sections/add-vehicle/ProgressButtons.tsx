@@ -11,6 +11,7 @@ export const ProgressNextButton = ({
   return (
     <button
       onClick={nextStep}
+      // disabled={selected == undefined}
       className={`rounded-xl px-4 py-2 flex items-center gap-x-1 ${selected ? 'bg-amber-500 text-black/80' : 'bg-white/10 text-white/10'}`}
     >
       <span className="">Continue</span>
