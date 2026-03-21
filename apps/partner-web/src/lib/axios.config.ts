@@ -1,5 +1,5 @@
 import { createApiClient } from '@taxidi/api-client';
-import { useAuthStore } from '@/store/store';
+import { useAuthStore } from '@/store/auth.store';
 
 export const api = createApiClient({
   baseURL: import.meta.env.VITE_API_URL,

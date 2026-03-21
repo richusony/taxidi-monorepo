@@ -11,7 +11,12 @@ const ProgressTracking = ({
       <div className="flex">
         {/* step */}
         {steps.map((s, index) => (
-          <StepComponent key={index} indexKey={index} stepText={s} currentStep={currentStep} />
+          <StepComponent
+            key={index}
+            indexKey={index}
+            stepText={s}
+            currentStep={currentStep}
+          />
         ))}
       </div>
     </section>
@@ -33,15 +38,21 @@ const StepComponent = ({
     <div className="w-32 flex flex-col items-start">
       {/* step text */}
       <div className="flex items-center">
-        <div className={`w-8 h-8 rounded-full border-2 text-sm bg-white/5 ${currentStep >= indexKey ? 'border-amber-500 text-amber-500': 'border-white/20 text-white/20'} flex justify-center items-center`}>
+        <div
+          className={`w-8 h-8 rounded-full border-2 text-sm bg-white/5 ${currentStep >= indexKey ? 'border-amber-500 text-amber-500' : 'border-white/20 text-white/20'} flex justify-center items-center`}
+        >
           {indexKey + 1}
         </div>
         {/* step loader */}
         <span
-          className={`${indexKey >= 7 && 'hidden'} ml-1 h-px w-20 rounded-full ${currentStep >= indexKey + 1 ? 'bg-amber-500': 'bg-white/20'}`}
+          className={`${indexKey >= 7 && 'hidden'} ml-1 h-px w-20 rounded-full ${currentStep >= indexKey + 1 ? 'bg-amber-500' : 'bg-white/20'}`}
         ></span>
       </div>
-      <p className={`mt-2 text-xs font-semibold ${currentStep >= indexKey ? 'text-amber-500': 'text-white/20'}`}>{stepText}</p>
+      <p
+        className={`mt-2 text-xs font-semibold ${currentStep >= indexKey ? 'text-amber-500' : 'text-white/20'}`}
+      >
+        {stepText}
+      </p>
     </div>
   );
 };

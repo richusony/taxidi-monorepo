@@ -1,13 +1,14 @@
-import type { VehicleAddWizardType } from '@/pages/add-vehicle/page';
+import { useVehicleAddStore } from '@/store/vehicle.store';
+import { ProgressPrevButton } from './ProgressButtons';
 
-const VehicleConfirm = ({ nextStep, prevStep }: VehicleAddWizardType) => {
+const VehicleConfirm = () => {
+  const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   return (
     <section>
       <h3>Confirm all selected Details</h3>
       <form>
-        <div className="flex gap-x-3">
-          <button onClick={prevStep}>Go back</button>
-          <button onClick={nextStep}>Next</button>
+        <div className="flex flex-end">
+          <ProgressPrevButton prevStep={prevStep} />
         </div>
       </form>
     </section>

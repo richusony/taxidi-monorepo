@@ -1,74 +1,68 @@
-import { useState, type JSX, type SyntheticEvent } from 'react';
+import { Car, Motorbike, Truck } from 'lucide-react';
+import { TbBus, TbCar, TbCarSuv } from 'react-icons/tb';
+import { useVehicleAddStore } from '@/store/vehicle.store';
+import { type JSX, type SyntheticEvent } from 'react';
 import VehicleConfirm from '@/components/sections/add-vehicle/VehicleConfirm';
+import ProgressTracking from '@/components/sections/add-vehicle/ProgressTracking';
+import VehicleTypeSelection from '@/components/sections/add-vehicle/VehicleTypeSelection';
 import VehicleModelSelction from '@/components/sections/add-vehicle/VehicleModelSelection';
 import VehicleBrandSelction from '@/components/sections/add-vehicle/VehicleBrandSelection';
 import VehicleDetailsSelction from '@/components/sections/add-vehicle/VehicleDetailsSelection';
 import VehiclePricingSelction from '@/components/sections/add-vehicle/VehiclePricingSelection';
 import VehicleVariantSelction from '@/components/sections/add-vehicle/VehicleVariantSelection';
 import VehicleLocationSelction from '@/components/sections/add-vehicle/VehicleLocationSelection';
-import ProgressTracking from '@/components/sections/add-vehicle/ProgressTracking';
-import VehicleTypeSelection from '@/components/sections/add-vehicle/VehicleTypeSelection';
-import { Car, Motorbike, Truck } from 'lucide-react';
-import { TbCarSuv } from 'react-icons/tb';
 
 export interface VehicleAddWizardType {
   nextStep: (e: SyntheticEvent) => void;
   prevStep: (e: SyntheticEvent) => void;
 }
 
-export interface VehicleTypesType  {
-    type: string;
-    icon: JSX.Element;
-    title: string;
-    subtitle: string;
-}[]
+export interface VehicleTypesType {
+  type: string;
+  icon: JSX.Element;
+  title: string;
+  subtitle: string;
+}
+[];
 
 const AddVehiclePage = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  const moveToNextStep = (e: SyntheticEvent) => {
-    e.preventDefault();
-    if (currentStep >= addVehicleSteps.length - 1) return;
-
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const moveToPreviousStep = (e: SyntheticEvent) => {
-    e.preventDefault();
-    if (currentStep <= 0) return;
-
-    setCurrentStep((prev) => prev - 1);
-  };
+  const currentStep = useVehicleAddStore((s) => s.currentStep);
 
   const vehicleTypes: VehicleTypesType[] = [
     {
       type: 'two-wheels',
-      icon: <Motorbike  className='w-8 h-8'/>,
-      title: "MotorCycle",
+      icon: <Motorbike className="w-8 h-8" />,
+      title: 'MotorCycle',
       subtitle: '2-wheeled motorized',
     },
     {
-      type: 'four-wheels',
-      icon: <Car className='w-8 h-8'/>,
-      title: "Car",
+      type: 'sedan',
+      icon: <TbCar className="w-8 h-8" />,
+      title: 'Sedan',
       subtitle: '4-wheeled standard',
     },
     {
-      type: 'four-wheels',
-      icon: <TbCarSuv className='w-8 h-8'/>,
-      title: "SUV / 4X4",
+      type: 'hatchback',
+      icon: <Car className="w-8 h-8" />,
+      title: 'Hatchback',
+      subtitle: '4-wheeled standard',
+    },
+    {
+      type: 'suv',
+      icon: <TbCarSuv className="w-8 h-8" />,
+      title: 'SUV / 4X4',
       subtitle: 'Sports utility vehicle',
     },
     {
-      type: 'four-wheels',
-      icon: <Truck className='w-8 h-8'/>,
-      title: "Truck / Van",
+      type: 'truck',
+      icon: <Truck className="w-8 h-8" />,
+      title: 'Truck / Van',
       subtitle: 'Commercial vehicles',
     },
     {
-      type: 'four-wheels',
-      icon: <Truck className='w-8 h-8'/>,
-      title: "Bus / Minivan",
+      type: 'minivan',
+      icon: <TbBus className="w-8 h-8" />,
+      title: 'Bus / Minivan',
       subtitle: 'Passenger transport',
     },
   ];
@@ -92,54 +86,16 @@ const AddVehiclePage = () => {
 
       <ProgressTracking steps={addVehicleSteps} currentStep={currentStep} />
       <section>
-        {addVehicleSteps[currentStep] == 'TYPE' && (
-          <VehicleTypeSelection vehicleTypes={vehicleTypes}
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
+        {currentStep === 0 && (
+          <VehicleTypeSelection vehicleTypes={vehicleTypes} />
         )}
-        {addVehicleSteps[currentStep] == 'BRAND' && (
-          <VehicleBrandSelction
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
-        {addVehicleSteps[currentStep] == 'MODEL' && (
-          <VehicleModelSelction
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
-        {addVehicleSteps[currentStep] == 'VARIANT' && (
-          <VehicleVariantSelction
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
-        {addVehicleSteps[currentStep] == 'DETAILS' && (
-          <VehicleDetailsSelction
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
-        {addVehicleSteps[currentStep] == 'PRICING' && (
-          <VehiclePricingSelction
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
-        {addVehicleSteps[currentStep] == 'LOCATION' && (
-          <VehicleLocationSelction
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
-        {addVehicleSteps[currentStep] == 'CONFIRM' && (
-          <VehicleConfirm
-            nextStep={moveToNextStep}
-            prevStep={moveToPreviousStep}
-          />
-        )}
+        {currentStep === 1 && <VehicleBrandSelction />}
+        {currentStep === 2 && <VehicleModelSelction />}
+        {currentStep === 3 && <VehicleVariantSelction />}
+        {currentStep === 4 && <VehicleDetailsSelction />}
+        {currentStep === 5 && <VehiclePricingSelction />}
+        {currentStep === 6 && <VehicleLocationSelction />}
+        {currentStep === 7 && <VehicleConfirm />}
       </section>
     </main>
   );

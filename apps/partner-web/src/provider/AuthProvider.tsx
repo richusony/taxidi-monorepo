@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useAuthStore } from '../store/store';
+import { useAuthStore } from '../store/auth.store';
 import { api } from '../lib/axios.config';
 import TaxidiLoader from '@/components/loaders';
 

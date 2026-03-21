@@ -1,16 +1,17 @@
-import type { VehicleAddWizardType } from '@/pages/add-vehicle/page';
+import { ProgressNextButton, ProgressPrevButton } from './ProgressButtons';
+import { useVehicleAddStore } from '@/store/vehicle.store';
 
-const VehicleVariantSelction = ({
-  nextStep,
-  prevStep,
-}: VehicleAddWizardType) => {
+const VehicleVariantSelction = () => {
+  const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
+  const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
+  const selectedVariant = useVehicleAddStore((s) => s.data.vehicleVariant);
   return (
     <section>
       <h3>Select Vehicle Variant</h3>
       <form>
         <div className="flex gap-x-3">
-          <button onClick={prevStep}>Go back</button>
-          <button onClick={nextStep}>Next</button>
+          <ProgressPrevButton prevStep={prevStep} />
+          <ProgressNextButton selected={selectedVariant} nextStep={nextStep} />
         </div>
       </form>
     </section>
