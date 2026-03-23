@@ -72,6 +72,7 @@ const AddVehiclePage = () => {
     'LOCATION',
     'CONFIRM',
   ];
+
   return (
     <section className="bg-black min-h-screen py-5 px-8 text-white">
       <h1 className="mt-1 text-2xl font-semibold">List a New Vehicle</h1>
