@@ -12,7 +12,7 @@ export const ProgressNextButton = ({
     <button
       onClick={nextStep}
       // disabled={selected == undefined}
-      className={`rounded-xl px-4 py-2 flex items-center gap-x-1 ${selected ? 'bg-amber-500 text-black/80' : 'bg-white/10 text-white/10'}`}
+      className={`rounded-xl px-4 py-2 flex items-center gap-x-1 ${selected ? 'bg-amber-500 text-black/80' : 'bg-white/10 text-white/10 cursor-not-allowed'}`}
     >
       <span className="">Continue</span>
       <span className="">
