@@ -7,7 +7,7 @@ const VehicleVariantSelction = () => {
   const selectedVariant = useVehicleAddStore((s) => s.data.vehicleVariant);
   const selectedTransmission = useVehicleAddStore((s) => s.data.transmission);
   const selectedFuel = useVehicleAddStore((s) => s.data.fuel);
-  const setVariant = useVehicleAddStore((s) => s.setData);
+  const storeValues = useVehicleAddStore((s) => s.setData);
 
   const trimList = [
     { id: '1', title: 'Base', subtitle: 'Standard trim' },
@@ -65,10 +65,13 @@ const VehicleVariantSelction = () => {
   ];
 
   const handleSelectVariant = (variantId: string) =>
-    setVariant({ vehicleVariant: variantId });
+    storeValues({ vehicleVariant: variantId });
+
   const handleSelectTransmission = (tranmissionId: string) =>
-    setVariant({ transmission: tranmissionId });
-  const handleSelectFuel = (fuelId: string) => setVariant({ fuel: fuelId });
+    storeValues({ transmission: tranmissionId });
+
+  const handleSelectFuel = (fuelId: string) => storeValues({ fuel: fuelId });
+
   return (
     <SelectionWrapperUI
       nextBtn={nextStep}
