@@ -8,7 +8,11 @@ export interface VehicleFormData {
   vehicleVariant?: string;
   transmission?: string;
   fuel?: string;
-  details?: any;
+  bodyColor?: string;
+  mileage?: number;
+  engineDisplacement?: number;
+  numberPlate?: string;
+  description?: string;
   pricing?: any;
   location?: any;
 }
