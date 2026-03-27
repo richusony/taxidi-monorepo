@@ -13,7 +13,8 @@ export interface VehicleFormData {
   engineDisplacement?: number;
   numberPlate?: string;
   description?: string;
-  pricing?: any;
+  pricePerDay?: number;
+  pricePerWeek?: number;
   location?: any;
 }
 
