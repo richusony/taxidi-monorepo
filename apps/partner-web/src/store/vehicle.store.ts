@@ -15,7 +15,8 @@ export interface VehicleFormData {
   description?: string;
   pricePerDay?: number;
   pricePerWeek?: number;
-  location?: any;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface VehicleAddStore {
