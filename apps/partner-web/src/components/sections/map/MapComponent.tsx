@@ -30,7 +30,7 @@ const MapComponent = ({ onClick }: { onClick: (e: any) => void }) => {
         latitude,
         zoom: 13,
       }}
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }}
       mapStyle="https://tiles.stadiamaps.com/styles/alidade_smooth.json"
       onClick={onClick}
     >

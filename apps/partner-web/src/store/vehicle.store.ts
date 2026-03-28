@@ -17,6 +17,11 @@ export interface VehicleFormData {
   pricePerWeek?: number;
   latitude?: number;
   longitude?: number;
+  city?: string;
+  landmark?: string;
+  state?: string;
+  pincode?: string;
+  fullAddress?: string;
 }
 
 interface VehicleAddStore {
