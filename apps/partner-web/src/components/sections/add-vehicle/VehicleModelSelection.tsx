@@ -5,12 +5,10 @@ import { Search } from 'lucide-react';
 
 const VehicleModelSelction = () => {
   const [searchInput, setSearchInput] = useState('');
-  const [selectedYear, setSelectedYear] = useState<number | undefined>(
-    undefined,
-  );
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const selectedModel = useVehicleAddStore((s) => s.data.vehicleModel);
+  const selectedModelYear = useVehicleAddStore((s) => s.data.vehicleModelYear);
   const setModel = useVehicleAddStore((s) => s.setData);
 
   const modelYears = useMemo(() => {
@@ -53,13 +51,13 @@ const VehicleModelSelction = () => {
         );
 
   const handleSelectedYear = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setSelectedYear(parseInt(e.target.value));
+    setModel({vehicleModelYear: parseInt(e.target.value)});
 
   return (
     <SelectionWrapperUI
       nextBtn={nextStep}
       prevBtn={prevStep}
-      selected={selectedModel && selectedYear?.toString()}
+      selected={selectedModel && selectedModelYear?.toString()}
       wrapperTitle="Select the model & year"
       wrapperDescription="Pick the exact model series and production year."
     >
@@ -75,7 +73,7 @@ const VehicleModelSelction = () => {
             <select
               name="selectModelYear"
               id="selectModelYear"
-              defaultValue={selectedYear}
+              defaultValue={selectedModelYear}
               className="w-full text-white/80 outline-none"
               onChange={handleSelectedYear}
             >
@@ -87,6 +85,7 @@ const VehicleModelSelction = () => {
                   key={'model-year-' + year}
                   value={year}
                   className="bg-black/70"
+                  selected={selectedModelYear == year}
                 >
                   {year}
                 </option>

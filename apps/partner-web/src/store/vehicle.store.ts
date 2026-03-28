@@ -4,6 +4,7 @@ import { create } from 'zustand';
 export interface VehicleFormData {
   vehicleType?: string;
   vehicleBrand?: string;
+  vehicleModelYear?: number;
   vehicleModel?: string;
   vehicleVariant?: string;
   transmission?: string;

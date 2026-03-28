@@ -1,5 +1,10 @@
 import type { ReactNode, SyntheticEvent } from 'react';
-import { ProgressNextButton, ProgressPrevButton } from './ProgressButtons';
+import {
+  ProgressNextButton,
+  ProgressPrevButton,
+  SubmitButton,
+} from './ProgressButtons';
+import { useVehicleAddStore } from '@/store/vehicle.store';
 
 interface SelectionWrapperParams {
   wrapperTitle: string;
@@ -22,6 +27,7 @@ const SelectionWrapperUI = ({
   children,
   selected,
 }: SelectionWrapperParams) => {
+  const currentStep = useVehicleAddStore((s) => s.currentStep);
   return (
     <section className="rounded-2xl border border-white/10 p-8 bg-white/10">
       <h3 className="font-semibold">{wrapperTitle}</h3>
@@ -35,12 +41,19 @@ const SelectionWrapperUI = ({
             ? 'justify-between'
             : isPrevEnabled == false && isNextEnabled == true
               ? 'justify-end'
-              : 'justify-start'
+              : isPrevEnabled == true &&
+                  isNextEnabled == false &&
+                  currentStep == 7
+                ? 'justify-between'
+                : 'justify-start'
         }`}
       >
         {isPrevEnabled && <ProgressPrevButton prevStep={prevBtn} />}
         {isNextEnabled && (
           <ProgressNextButton selected={selected} nextStep={nextBtn} />
+        )}
+        {currentStep == 7 && (
+          <SubmitButton onSubmit={() => console.log('hi')} />
         )}
       </div>
     </section>

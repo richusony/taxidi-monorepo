@@ -37,3 +37,14 @@ export const ProgressPrevButton = ({
     </button>
   );
 };
+
+export const SubmitButton = ({ onSubmit }: { onSubmit: () => void }) => {
+  return (
+    <button
+      onClick={onSubmit}
+      className={`rounded-xl px-6 py-2 flex items-center gap-x-1 bg-amber-500 text-black/80 cursor-pointer`}
+    >
+      <span className="">Submit</span>
+    </button>
+  );
+};

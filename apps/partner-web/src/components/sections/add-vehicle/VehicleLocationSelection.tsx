@@ -31,7 +31,7 @@ const VehicleLocationSelction = () => {
       );
 
       setLocation({
-        city: data?.address?.town,
+        city: data?.address.city ?? data?.address.town,
         state: data?.address?.state,
         pincode: data?.address?.postcode,
         fullAddress: data?.display_name
