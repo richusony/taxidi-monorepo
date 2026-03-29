@@ -3,15 +3,23 @@ import { create } from 'zustand';
 
 export interface VehicleFormData {
   vehicleType?: string;
+  vehicleTypeId?: string;
   vehicleBrand?: string;
+  vehicleBrandId?: string;
   vehicleModelYear?: number;
   vehicleModel?: string;
+  vehicleModelId?: string;
   vehicleVariant?: string;
+  vehicleVariantId?: string;
   transmission?: string;
+  transmissionId?: string;
   fuel?: string;
+  fuelId?: string;
   bodyColor?: string;
+  bodyColorId?: string;
   mileage?: number;
   engineDisplacement?: number;
+  engineDisplacementId?: number;
   numberPlate?: string;
   description?: string;
   pricePerDay?: number;

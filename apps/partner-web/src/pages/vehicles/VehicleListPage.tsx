@@ -16,21 +16,21 @@ const VehicleListPage = () => {
     setOpenModal((prev) => !prev);
   };
 
-  useEffect(() => {
-    const handleFetchPartners = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await api.get('/partner/vehicles');
-        setVehicles(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Something went wrong');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    handleFetchPartners();
-  }, []);
+  // useEffect(() => {
+  //   const handleFetchPartners = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const { data } = await api.get('/partner/vehicles');
+  //       setVehicles(data);
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error('Something went wrong');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   handleFetchPartners();
+  // }, []);
 
   if (isLoading) return <TaxidiLoader loadingText="Loading Vehicles..." />;
 

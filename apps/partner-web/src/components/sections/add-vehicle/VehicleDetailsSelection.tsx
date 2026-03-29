@@ -1,10 +1,11 @@
 import { useVehicleAddStore } from '@/store/vehicle.store';
 import SelectionWrapperUI from './SelectionWrapperUI';
+import type { VehicleBodyColorType } from '@/types';
 
-const VehicleDetailsSelction = () => {
+const VehicleDetailsSelction = ({bodyColorList}: {bodyColorList: VehicleBodyColorType[]}) => {
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
-  const selectedBodyColor = useVehicleAddStore((s) => s.data.bodyColor);
+  const selectedBodyColorId = useVehicleAddStore((s) => s.data.bodyColorId);
   const selectedMileage = useVehicleAddStore((s) => s.data.mileage);
   const selectedEngineDisplacement = useVehicleAddStore(
     (s) => s.data.engineDisplacement,
@@ -13,36 +14,8 @@ const VehicleDetailsSelction = () => {
   const selectedDescription = useVehicleAddStore((s) => s.data.description);
   const setValues = useVehicleAddStore((s) => s.setData);
 
-  const bodyColorList = [
-    {
-      id: '1',
-      color: 'bg-blue-500',
-      colorText: 'STEALTH BLUE',
-    },
-    {
-      id: '2',
-      color: 'bg-green-500',
-      colorText: 'SOLID GREEN',
-    },
-    {
-      id: '3',
-      color: 'bg-red-500',
-      colorText: 'DANGER RED',
-    },
-    {
-      id: '4',
-      color: 'bg-yellow-500',
-      colorText: 'GLOSSY YELLOW',
-    },
-    {
-      id: '5',
-      color: 'bg-black/80',
-      colorText: 'MAT BLACK',
-    },
-  ];
-
-  const handleSelectBodyColor = (color: string) =>
-    setValues({ bodyColor: color });
+  const handleSelectBodyColor = (id: string, color: string) =>
+    setValues({bodyColorId:id,  bodyColor: color });
   const handleSelectMileage = (mileage: number) => {
     if (!mileage || mileage <= 0) return setValues({ mileage: undefined });
     setValues({ mileage });
@@ -56,7 +29,7 @@ const VehicleDetailsSelction = () => {
       nextBtn={nextStep}
       prevBtn={prevStep}
       selected={
-        selectedBodyColor &&
+        selectedBodyColorId &&
         selectedMileage?.toString() &&
         selectedEngineDisplacement?.toString()
       }
@@ -75,7 +48,7 @@ const VehicleDetailsSelction = () => {
                 id={c.id}
                 color={c.color}
                 colorText={c.colorText}
-                selected={selectedBodyColor}
+                selected={selectedBodyColorId}
                 handleSelect={handleSelectBodyColor}
               />
             ))}
@@ -179,12 +152,12 @@ const ColorListComponent = ({
   color: string;
   colorText: string;
   selected: string | undefined;
-  handleSelect: (value: string) => void;
+  handleSelect: (id: string,value: string) => void;
 }) => {
   return (
     <div
       className="transition-all ease-in w-32 hover:scale-105"
-      onClick={() => handleSelect(id)}
+      onClick={() => handleSelect(id, colorText)}
     >
       <button className={`w-32 h-24 rounded-md ${color}`}></button>
       <p

@@ -1,82 +1,40 @@
 import { useVehicleAddStore } from '@/store/vehicle.store';
 import SelectionWrapperUI from './SelectionWrapperUI';
+import type {
+  VehicleVariantFuelType,
+  VehicleVariantTransmissionType,
+  VehicleVariantTrimType,
+} from '@/types';
 
-const VehicleVariantSelction = () => {
+const VehicleVariantSelction = ({
+  trimList,
+  transmissionList,
+  fuelList,
+}: {
+  trimList: VehicleVariantTrimType[];
+  transmissionList: VehicleVariantTransmissionType[];
+  fuelList: VehicleVariantFuelType[];
+}) => {
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
-  const selectedVariant = useVehicleAddStore((s) => s.data.vehicleVariant);
-  const selectedTransmission = useVehicleAddStore((s) => s.data.transmission);
-  const selectedFuel = useVehicleAddStore((s) => s.data.fuel);
+  const selectedVariantId = useVehicleAddStore((s) => s.data.vehicleVariantId);
+  const selectedTransmissionId = useVehicleAddStore((s) => s.data.transmissionId);
+  const selectedFuelId = useVehicleAddStore((s) => s.data.fuelId);
   const storeValues = useVehicleAddStore((s) => s.setData);
 
-  const trimList = [
-    { id: '1', title: 'Base', subtitle: 'Standard trim' },
-    { id: '2', title: 'Mid', subtitle: 'Mid-range trim' },
-    { id: '3', title: 'High', subtitle: 'Premium trim' },
-    { id: '4', title: 'Top of the line', subtitle: 'Flagship trim' },
-    { id: '5', title: 'Sport', subtitle: 'Sport edition' },
-    { id: '6', title: 'Limited', subtitle: 'Limited edition' },
-  ];
+  const handleSelectVariant = (variantId: string, variant: string) =>
+    storeValues({ vehicleVariantId: variantId, vehicleVariant: variant });
 
-  const transmissionList = [
-    {
-      id: '1',
-      title: 'AT',
-      subtitle: 'Automatic',
-    },
-    {
-      id: '2',
-      title: 'MT',
-      subtitle: 'Manual',
-    },
-    {
-      id: '3',
-      title: 'CVT',
-      subtitle: 'CVT',
-    },
-    {
-      id: '4',
-      title: 'DCT',
-      subtitle: 'DCT',
-    },
-  ];
+  const handleSelectTransmission = (tranmissionId: string, value: string) =>
+    storeValues({ transmissionId: tranmissionId, transmission: value });
 
-  const fuelList = [
-    {
-      id: '1',
-      title: 'Petrol',
-    },
-    {
-      id: '2',
-      title: 'Diesel',
-    },
-    {
-      id: '3',
-      title: 'Electric',
-    },
-    {
-      id: '4',
-      title: 'Hybrid',
-    },
-    {
-      id: '5',
-      title: 'CNG',
-    },
-  ];
-
-  const handleSelectVariant = (variantId: string) =>
-    storeValues({ vehicleVariant: variantId });
-
-  const handleSelectTransmission = (tranmissionId: string) =>
-    storeValues({ transmission: tranmissionId });
-
-  const handleSelectFuel = (fuelId: string) => storeValues({ fuel: fuelId });
+  const handleSelectFuel = (fuelId: string, value: string) => storeValues({ fuelId: fuelId, fuel: value });
 
   return (
     <SelectionWrapperUI
       nextBtn={nextStep}
       prevBtn={prevStep}
-      selected={selectedVariant && selectedTransmission && selectedFuel}
+      selected={selectedVariantId && selectedTransmissionId && selectedFuelId}
       wrapperTitle="Choose the variant"
       wrapperDescription="Specify the trim level, transmission, and fuel type."
     >
@@ -95,7 +53,7 @@ const VehicleVariantSelction = () => {
                 id={t.id}
                 title={t.title}
                 subtitle={t.subtitle}
-                selected={selectedVariant}
+                selected={selectedVariantId}
                 handleSelect={handleSelectVariant}
               />
             ))}
@@ -114,7 +72,7 @@ const VehicleVariantSelction = () => {
                 id={t.id}
                 title={t.title}
                 subtitle={t.subtitle}
-                selected={selectedTransmission}
+                selected={selectedTransmissionId}
                 handleSelect={handleSelectTransmission}
               />
             ))}
@@ -132,7 +90,7 @@ const VehicleVariantSelction = () => {
                 key={i + t.title}
                 id={t.id}
                 title={t.title}
-                selected={selectedFuel}
+                selected={selectedFuelId}
                 handleSelect={handleSelectFuel}
               />
             ))}
@@ -156,11 +114,11 @@ const TrimComponent = ({
   title: string;
   subtitle: string;
   selected: string | undefined;
-  handleSelect: (value: string) => void;
+  handleSelect: (id:string, value: string) => void;
 }) => {
   return (
     <div
-      onClick={() => handleSelect(id)}
+      onClick={() => handleSelect(id, title)}
       className={`transition-all ease-in w-1/5 border ${selected == id ? 'border-amber-500' : 'border-white/20'} rounded-xl px-3 py-2 ${selected == id ? 'bg-amber-500/5' : 'bg-black/20'} cursor-pointer hover:scale-105`}
     >
       <p className={`text-sm`}>{title}</p>
@@ -180,11 +138,11 @@ const TransmissionComponent = ({
   title: string;
   subtitle: string;
   selected: string | undefined;
-  handleSelect: (value: string) => void;
+  handleSelect: (id: string, value: string) => void;
 }) => {
   return (
     <div
-      onClick={() => handleSelect(id)}
+      onClick={() => handleSelect(id, title)}
       className={`transition-all ease-in w-1/5 text-center border ${selected == id ? 'border-amber-500' : 'border-white/20'} rounded-xl px-3 py-2 ${selected == id ? 'bg-amber-500/5' : 'bg-black/20'} cursor-pointer hover:scale-105`}
     >
       <p className={`text-xs`}>{title}</p>
@@ -202,11 +160,11 @@ const FuelComponent = ({
   id: string;
   title: string;
   selected: string | undefined;
-  handleSelect: (value: string) => void;
+  handleSelect: (id: string, value: string) => void;
 }) => {
   return (
     <div
-      onClick={() => handleSelect(id)}
+      onClick={() => handleSelect(id, title)}
       className={`transition-all ease-in w-1/8 text-center border ${selected == id ? 'border-amber-500' : 'border-white/20'} rounded-xl px-1 py-2 ${selected == id ? 'bg-amber-500/5' : 'bg-black/20'} cursor-pointer hover:scale-105`}
     >
       <p className={`text-xs`}>{title}</p>

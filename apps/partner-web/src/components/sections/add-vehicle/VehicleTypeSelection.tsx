@@ -9,10 +9,11 @@ interface TypesProps {
 const VehicleTypeSelection = ({ vehicleTypes }: TypesProps) => {
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const setVehicleData = useVehicleAddStore((s) => s.setData);
-  const selectedVehicleType = useVehicleAddStore((s) => s.data.vehicleType);
+  const selectedVehicleTypeId = useVehicleAddStore((s) => s.data.vehicleTypeId);
 
-  const handleSetVehicleData = (value: string) => {
+  const handleSetVehicleData = (id: string, value: string) => {
     setVehicleData({
+      vehicleTypeId: id,
       vehicleType: value,
     });
   };
@@ -20,7 +21,7 @@ const VehicleTypeSelection = ({ vehicleTypes }: TypesProps) => {
     <SelectionWrapperUI
       isPrevEnabled={false}
       nextBtn={nextStep}
-      selected={selectedVehicleType}
+      selected={selectedVehicleTypeId}
       wrapperTitle="What type of vehicle?"
       wrapperDescription="Select the category that best describes your vehicle."
       prevBtn={() => {}}
@@ -29,9 +30,10 @@ const VehicleTypeSelection = ({ vehicleTypes }: TypesProps) => {
         {vehicleTypes.map((vt, index) => (
           <VehicleTypeComponent
             key={index + 'vt-index'}
+            id={vt.id}
             vehicleType={vt}
             handleSelect={handleSetVehicleData}
-            seleted={selectedVehicleType}
+            seleted={selectedVehicleTypeId}
           />
         ))}
       </div>
@@ -42,35 +44,37 @@ const VehicleTypeSelection = ({ vehicleTypes }: TypesProps) => {
 export default VehicleTypeSelection;
 
 const VehicleTypeComponent = ({
+  id,
   vehicleType,
   handleSelect,
   seleted,
 }: {
+  id: string;
   vehicleType: VehicleTypesType;
   seleted: string | undefined;
-  handleSelect: (value: string) => void;
+  handleSelect: (id: string, value: string) => void;
 }) => {
   const getTypeLowerCase = () => {
     return vehicleType.type.toLowerCase();
   };
+
+  const lowerCasedType = getTypeLowerCase();
   return (
     <div
-      id={getTypeLowerCase()}
-      onClick={() => handleSelect(getTypeLowerCase())}
-      className={`transition-all ease-in w-52 h-28 rounded-xl ${seleted === getTypeLowerCase() ? 'border border-amber-500' : ''} p-5 ${seleted === getTypeLowerCase() ? 'bg-amber-500/5' : 'bg-black/30'} flex flex-col items-center text-white/40 hover:scale-105 cursor-pointer`}
+      id={lowerCasedType}
+      onClick={() => handleSelect(vehicleType.id, lowerCasedType)}
+      className={`transition-all ease-in w-52 h-28 rounded-xl ${seleted === id ? 'border border-amber-500' : ''} p-5 ${seleted === id ? 'bg-amber-500/5' : 'bg-black/30'} flex flex-col items-center text-white/40 hover:scale-105 cursor-pointer`}
     >
-      <p
-        className={`${seleted === getTypeLowerCase() ? 'text-amber-500' : ''}`}
-      >
+      <p className={`${seleted === id ? 'text-amber-500' : ''}`}>
         {vehicleType.icon}
       </p>
       <p
-        className={`mt-1 ${seleted === getTypeLowerCase() ? 'text-amber-500' : 'text-white/80'} text-sm`}
+        className={`mt-1 ${seleted === id ? 'text-amber-500' : 'text-white/80'} text-sm`}
       >
         {vehicleType.title}
       </p>
       <p
-        className={`mt-1 text-xs ${seleted === getTypeLowerCase() ? 'text-amber-500' : 'text-white/80'}`}
+        className={`mt-1 text-xs ${seleted === id ? 'text-amber-500' : 'text-white/80'}`}
       >
         {vehicleType.subtitle}
       </p>

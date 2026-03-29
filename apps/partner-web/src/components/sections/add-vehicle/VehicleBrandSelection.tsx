@@ -2,39 +2,18 @@ import { Search } from 'lucide-react';
 import SelectionWrapperUI from './SelectionWrapperUI';
 import { useVehicleAddStore } from '@/store/vehicle.store';
 import React, { useState } from 'react';
+import type { VehicleBrandType } from '@/types';
 
-const VehicleBrandSelction = () => {
+const VehicleBrandSelction = ({vehicleBrands}: { vehicleBrands: VehicleBrandType[]}) => {
   const [searchInput, setSearchInput] = useState('');
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
-  const selectedBrand = useVehicleAddStore((s) => s.data.vehicleBrand);
+  const selectedBrandId = useVehicleAddStore((s) => s.data.vehicleBrandId);
   const setVehicleBrand = useVehicleAddStore((s) => s.setData);
 
-  const vehicleBrands = [
-    { id: '1', brand: 'Toyota' },
-    { id: '2', brand: 'Honda' },
-    { id: '3', brand: 'Nissan' },
-    { id: '4', brand: 'Mitsubishi' },
-    { id: '5', brand: 'Suzuki' },
-    { id: '6', brand: 'Hyundai' },
-    { id: '7', brand: 'Kia' },
-    { id: '8', brand: 'Ford' },
-    { id: '9', brand: 'Chevrolet' },
-    { id: '10', brand: 'Isuzu' },
-    { id: '11', brand: 'Mazda' },
-    { id: '12', brand: 'Subaru' },
-    { id: '13', brand: 'BMW' },
-    { id: '14', brand: 'Mercedes-Benz' },
-    { id: '15', brand: 'Audi' },
-    { id: '16', brand: 'Volkswagen' },
-    { id: '17', brand: 'Lexus' },
-    { id: '18', brand: 'Volvo' },
-    { id: '19', brand: 'Land Rover' },
-    { id: '20', brand: 'Jeep' },
-  ];
 
-  const handleSelectBrand = (brandId: string) =>
-    setVehicleBrand({ vehicleBrand: brandId });
+  const handleSelectBrand = (brandId: string, brand: string) =>
+    setVehicleBrand({ vehicleBrandId: brandId, vehicleBrand: brand });
 
   const filteredVehicleBrands =
     searchInput === ''
@@ -46,11 +25,12 @@ const VehicleBrandSelction = () => {
   const handleBrandSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
+
   return (
     <SelectionWrapperUI
       nextBtn={nextStep}
       prevBtn={prevStep}
-      selected={selectedBrand}
+      selected={selectedBrandId}
       wrapperTitle="Select a brand"
       wrapperDescription="Choose the manufacturer of your vehicle."
     >
@@ -75,7 +55,7 @@ const VehicleBrandSelction = () => {
               key={man.id + man.brand}
               id={man.id}
               name={man.brand}
-              selected={selectedBrand}
+              selected={selectedBrandId}
               onClick={handleSelectBrand}
             />
           ))}
@@ -96,11 +76,11 @@ const BrandComponent = ({
   id: string;
   name: string;
   selected: string | undefined;
-  onClick: (brandId: string) => void;
+  onClick: (brandId: string, brand:string) => void;
 }) => {
   return (
     <div
-      onClick={() => onClick(id)}
+      onClick={() => onClick(id, name)}
       className={`transition-all ease-in w-32 h-10 border rounded-md p-2 ${selected == id ? 'bg-amber-500/5 border-amber-500/80' : 'bg-black/20 border-white/20'} flex justify-center items-center hover:scale-105 cursor-default`}
     >
       <span className="text-white/70 text-xs">{name}</span>

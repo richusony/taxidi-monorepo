@@ -2,12 +2,13 @@ import { useVehicleAddStore } from '@/store/vehicle.store';
 import SelectionWrapperUI from './SelectionWrapperUI';
 import React, { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
+import type { VehicleModelType } from '@/types';
 
-const VehicleModelSelction = () => {
+const VehicleModelSelction = ({models}: {models: VehicleModelType[]}) => {
   const [searchInput, setSearchInput] = useState('');
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
-  const selectedModel = useVehicleAddStore((s) => s.data.vehicleModel);
+  const selectedModelId = useVehicleAddStore((s) => s.data.vehicleModelId);
   const selectedModelYear = useVehicleAddStore((s) => s.data.vehicleModelYear);
   const setModel = useVehicleAddStore((s) => s.setData);
 
@@ -27,26 +28,13 @@ const VehicleModelSelction = () => {
     setSearchInput(e.target.value);
   };
 
-  const handleSelectModel = (modelId: string) =>
-    setModel({ vehicleModel: modelId });
-
-  const Models = [
-    { id: '1', model: 'Corolla' },
-    { id: '2', model: 'Camry' },
-    { id: '3', model: 'Vios' },
-    { id: '4', model: 'Yaris' },
-    { id: '5', model: 'Fortuner' },
-    { id: '6', model: 'Land Cruiser' },
-    { id: '7', model: 'HiAce' },
-    { id: '8', model: 'Hilux' },
-    { id: '9', model: 'Prius' },
-    { id: '10', model: 'Innova' },
-  ];
+  const handleSelectModel = (modelId: string, model: string) =>
+    setModel({ vehicleModelId: modelId, vehicleModel: model });
 
   const filteredVehicleModels =
     searchInput == ''
-      ? Models
-      : Models.filter((mod) =>
+      ? models
+      : models.filter((mod) =>
           mod.model.toLowerCase().startsWith(searchInput.toLowerCase()),
         );
 
@@ -57,7 +45,7 @@ const VehicleModelSelction = () => {
     <SelectionWrapperUI
       nextBtn={nextStep}
       prevBtn={prevStep}
-      selected={selectedModel && selectedModelYear?.toString()}
+      selected={selectedModelId && selectedModelYear?.toString()}
       wrapperTitle="Select the model & year"
       wrapperDescription="Pick the exact model series and production year."
     >
@@ -121,7 +109,7 @@ const VehicleModelSelction = () => {
               key={mod.id + mod.model}
               id={mod.id}
               name={mod.model}
-              selected={selectedModel}
+              selected={selectedModelId}
               onClick={handleSelectModel}
             />
           ))}
@@ -142,11 +130,11 @@ const ModelComponent = ({
   id: string;
   name: string;
   selected: string | undefined;
-  onClick: (modelId: string) => void;
+  onClick: (modelId: string, model: string) => void;
 }) => {
   return (
     <div
-      onClick={() => onClick(id)}
+      onClick={() => onClick(id, name)}
       className={`transition-all ease-in w-32 h-10 border rounded-md p-2 ${selected == id ? 'bg-amber-500/5 border-amber-500/80' : 'bg-black/20 border-white/20'} flex justify-center items-center hover:scale-105 cursor-default`}
     >
       <span className="text-white/70 text-xs">{name}</span>
