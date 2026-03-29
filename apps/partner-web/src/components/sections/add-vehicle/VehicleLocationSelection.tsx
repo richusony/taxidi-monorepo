@@ -8,7 +8,7 @@ import { FaLocationPin } from 'react-icons/fa6';
 
 const VehicleLocationSelction = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [detectedFullAddress, setDetectedFullAddress] = useState("");
+  const [detectedFullAddress, setDetectedFullAddress] = useState('');
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const selectedLatitude = useVehicleAddStore((s) => s.data.latitude);
@@ -34,9 +34,9 @@ const VehicleLocationSelction = () => {
         city: data?.address.city ?? data?.address.town,
         state: data?.address?.state,
         pincode: data?.address?.postcode,
-        fullAddress: data?.display_name
+        fullAddress: data?.display_name,
       });
-      setDetectedFullAddress(data?.display_name)
+      setDetectedFullAddress(data?.display_name);
       return data;
     } catch (error) {
       console.error('Reverse geocoding failed:', error);

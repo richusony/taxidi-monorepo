@@ -36,7 +36,7 @@ export interface VehicleVariantFuelType {
 }
 
 export interface VehicleBodyColorType {
-      id: string;
-      color: string;
-      colorText: string;
-    }
+  id: string;
+  color: string;
+  colorText: string;
+}

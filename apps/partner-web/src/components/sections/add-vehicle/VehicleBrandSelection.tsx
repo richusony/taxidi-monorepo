@@ -4,13 +4,16 @@ import { useVehicleAddStore } from '@/store/vehicle.store';
 import React, { useState } from 'react';
 import type { VehicleBrandType } from '@/types';
 
-const VehicleBrandSelction = ({vehicleBrands}: { vehicleBrands: VehicleBrandType[]}) => {
+const VehicleBrandSelction = ({
+  vehicleBrands,
+}: {
+  vehicleBrands: VehicleBrandType[];
+}) => {
   const [searchInput, setSearchInput] = useState('');
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const selectedBrandId = useVehicleAddStore((s) => s.data.vehicleBrandId);
   const setVehicleBrand = useVehicleAddStore((s) => s.setData);
-
 
   const handleSelectBrand = (brandId: string, brand: string) =>
     setVehicleBrand({ vehicleBrandId: brandId, vehicleBrand: brand });
@@ -76,7 +79,7 @@ const BrandComponent = ({
   id: string;
   name: string;
   selected: string | undefined;
-  onClick: (brandId: string, brand:string) => void;
+  onClick: (brandId: string, brand: string) => void;
 }) => {
   return (
     <div

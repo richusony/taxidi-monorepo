@@ -2,7 +2,11 @@ import { useVehicleAddStore } from '@/store/vehicle.store';
 import SelectionWrapperUI from './SelectionWrapperUI';
 import type { VehicleBodyColorType } from '@/types';
 
-const VehicleDetailsSelction = ({bodyColorList}: {bodyColorList: VehicleBodyColorType[]}) => {
+const VehicleDetailsSelction = ({
+  bodyColorList,
+}: {
+  bodyColorList: VehicleBodyColorType[];
+}) => {
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const selectedBodyColorId = useVehicleAddStore((s) => s.data.bodyColorId);
@@ -15,7 +19,7 @@ const VehicleDetailsSelction = ({bodyColorList}: {bodyColorList: VehicleBodyColo
   const setValues = useVehicleAddStore((s) => s.setData);
 
   const handleSelectBodyColor = (id: string, color: string) =>
-    setValues({bodyColorId:id,  bodyColor: color });
+    setValues({ bodyColorId: id, bodyColor: color });
   const handleSelectMileage = (mileage: number) => {
     if (!mileage || mileage <= 0) return setValues({ mileage: undefined });
     setValues({ mileage });
@@ -152,7 +156,7 @@ const ColorListComponent = ({
   color: string;
   colorText: string;
   selected: string | undefined;
-  handleSelect: (id: string,value: string) => void;
+  handleSelect: (id: string, value: string) => void;
 }) => {
   return (
     <div

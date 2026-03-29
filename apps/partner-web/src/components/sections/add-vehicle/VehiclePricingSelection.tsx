@@ -31,7 +31,7 @@ const VehiclePricingSelction = () => {
                 }
                 className="w-full outline-none"
                 type="number"
-                value={selectedPricePerDay ?? ""}
+                value={selectedPricePerDay ?? ''}
                 name="pricePerDay"
                 id="pricePerDay"
               />
@@ -49,7 +49,7 @@ const VehiclePricingSelction = () => {
                 }
                 className="w-full outline-none"
                 type="number"
-                value={selectedPricePerWeek ?? ""}
+                value={selectedPricePerWeek ?? ''}
                 name="pricePerWeek"
                 id="pricePerWeek"
               />

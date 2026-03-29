@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import type { VehicleModelType } from '@/types';
 
-const VehicleModelSelction = ({models}: {models: VehicleModelType[]}) => {
+const VehicleModelSelction = ({ models }: { models: VehicleModelType[] }) => {
   const [searchInput, setSearchInput] = useState('');
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
@@ -39,7 +39,7 @@ const VehicleModelSelction = ({models}: {models: VehicleModelType[]}) => {
         );
 
   const handleSelectedYear = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setModel({vehicleModelYear: parseInt(e.target.value)});
+    setModel({ vehicleModelYear: parseInt(e.target.value) });
 
   return (
     <SelectionWrapperUI

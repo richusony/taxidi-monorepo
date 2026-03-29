@@ -18,7 +18,9 @@ const VehicleVariantSelction = ({
   const prevStep = useVehicleAddStore((s) => s.moveToPrevStep);
   const nextStep = useVehicleAddStore((s) => s.moveToNextStep);
   const selectedVariantId = useVehicleAddStore((s) => s.data.vehicleVariantId);
-  const selectedTransmissionId = useVehicleAddStore((s) => s.data.transmissionId);
+  const selectedTransmissionId = useVehicleAddStore(
+    (s) => s.data.transmissionId,
+  );
   const selectedFuelId = useVehicleAddStore((s) => s.data.fuelId);
   const storeValues = useVehicleAddStore((s) => s.setData);
 
@@ -28,7 +30,8 @@ const VehicleVariantSelction = ({
   const handleSelectTransmission = (tranmissionId: string, value: string) =>
     storeValues({ transmissionId: tranmissionId, transmission: value });
 
-  const handleSelectFuel = (fuelId: string, value: string) => storeValues({ fuelId: fuelId, fuel: value });
+  const handleSelectFuel = (fuelId: string, value: string) =>
+    storeValues({ fuelId: fuelId, fuel: value });
 
   return (
     <SelectionWrapperUI
@@ -114,7 +117,7 @@ const TrimComponent = ({
   title: string;
   subtitle: string;
   selected: string | undefined;
-  handleSelect: (id:string, value: string) => void;
+  handleSelect: (id: string, value: string) => void;
 }) => {
   return (
     <div
