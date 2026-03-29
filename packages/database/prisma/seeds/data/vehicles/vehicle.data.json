@@ -1,0 +1,130 @@
+{
+  "types": [
+    {
+      "name": "4W",
+      "brands": [
+        {
+          "name": "Maruti",
+          "models": [
+            {
+              "name": "S-Presso",
+              "bodyType": "HATCHBACK",
+              "fuelType": "PETROL",
+              "seats": 4,
+              "variants": ["LXI", "VXI", "VXI+"]
+            },
+            {
+              "name": "Swift",
+              "bodyType": "HATCHBACK",
+              "fuelType": "PETROL",
+              "seats": 5,
+              "variants": ["LXI", "VXI", "ZXI"]
+            },
+            {
+              "name": "Baleno",
+              "bodyType": "HATCHBACK",
+              "fuelType": "PETROL",
+              "seats": 5,
+              "variants": ["Sigma", "Delta", "Zeta", "Alpha"]
+            }
+          ]
+        },
+        {
+          "name": "Hyundai",
+          "models": [
+            {
+              "name": "i20",
+              "bodyType": "HATCHBACK",
+              "fuelType": "PETROL",
+              "seats": 5,
+              "variants": ["Magna", "Sportz", "Asta"]
+            },
+            {
+              "name": "Creta",
+              "bodyType": "SUV",
+              "fuelType": "PETROL",
+              "seats": 5,
+              "variants": ["E", "EX", "SX", "SX(O)"]
+            }
+          ]
+        },
+        {
+          "name": "Tata",
+          "models": [
+            {
+              "name": "Nexon",
+              "bodyType": "SUV",
+              "fuelType": "PETROL",
+              "seats": 5,
+              "variants": ["XE", "XM", "XZ", "XZ+"]
+            },
+            {
+              "name": "Tiago",
+              "bodyType": "HATCHBACK",
+              "fuelType": "PETROL",
+              "seats": 5,
+              "variants": ["XE", "XM", "XT", "XZ"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "2W",
+      "brands": [
+        {
+          "name": "Honda",
+          "models": [
+            {
+              "name": "Activa",
+              "bodyType": "SCOOTER",
+              "fuelType": "PETROL",
+              "seats": 2,
+              "variants": ["Activa 6G", "Activa 125"]
+            },
+            {
+              "name": "Shine",
+              "bodyType": "MOTORCYCLE",
+              "fuelType": "PETROL",
+              "seats": 2,
+              "variants": ["Shine 100", "Shine 125"]
+            }
+          ]
+        },
+        {
+          "name": "TVS",
+          "models": [
+            {
+              "name": "Apache",
+              "bodyType": "MOTORCYCLE",
+              "fuelType": "PETROL",
+              "seats": 2,
+              "variants": ["RTR 160", "RTR 180", "RTR 200"]
+            },
+            {
+              "name": "Jupiter",
+              "bodyType": "SCOOTER",
+              "fuelType": "PETROL",
+              "seats": 2,
+              "variants": ["Standard", "ZX", "Classic"]
+            }
+          ]
+        },
+
+        {
+          "name": "Bajaj",
+          "models": [
+            {
+              "name": "Pulsar",
+              "bodyType": "MOTORCYCLE",
+              "fuelType": "PETROL",
+              "seats": 2,
+              "variants": ["125", "150", "180", "220"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

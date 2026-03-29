@@ -9,8 +9,8 @@ interface AuthState {
   logout: () => void;
 }
 
-const authUrl = import.meta.env.VITE_AUTH_REDIRECT_URL;
-if (!authUrl) console.error('VITE_AUTH_REDIRECT_URL is undefined');
+const authUrl = import.meta.env.VITE_AUTH_WEB_URL;
+if (!authUrl) console.error('VITE_AUTH_WEB_URL is undefined');
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,

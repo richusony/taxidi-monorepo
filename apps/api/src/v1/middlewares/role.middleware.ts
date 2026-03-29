@@ -15,7 +15,9 @@ export function authorizeRole(allowedRole: RoleName) {
       // );
 
       if (allowedRole !== userRole) {
-        throw new ForbiddenError('Forbidden: You are not allowed to do this');
+        throw new ForbiddenError(
+          'Forbidden: You are not allowed to access this',
+        );
       }
 
       next();

@@ -33,7 +33,9 @@ export class AdminRepository {
 
   async findPartnerByEmail(email: string) {
     return prisma.users.findUnique({
-      where: { email },
+      where: {
+        email,
+      },
       select: {
         id: true,
         email: true,

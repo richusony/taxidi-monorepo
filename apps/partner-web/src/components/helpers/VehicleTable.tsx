@@ -12,75 +12,8 @@ interface PartnerType {
   updatedAt: string;
 }
 
-const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
+const VehicleTable = ({ vehicles }: { vehicles: PartnerType[] }) => {
   const headerTabs = ['Name', 'Email', 'Phone', 'Place', 'Status', 'Action'];
-
-  //     const hostList = [
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=12",
-  //         hostName: "Liam Jacob",
-  //         hostEmail: "liamjacob@gmail.com",
-  //         hostPhone: "+11 536 732 373",
-  //         hostPlace: "Kannur",
-  //         requestStatus: "pending"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=23",
-  //         hostName: "Aarav Menon",
-  //         hostEmail: "aarav.menon@gmail.com",
-  //         hostPhone: "+91 98765 43210",
-  //         hostPlace: "Kozhikode",
-  //         requestStatus: "approved"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=34",
-  //         hostName: "Neha Sharma",
-  //         hostEmail: "neha.sharma@gmail.com",
-  //         hostPhone: "+91 91234 56789",
-  //         hostPlace: "Bangalore",
-  //         requestStatus: "cancelled"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=45",
-  //         hostName: "Rahul Verma",
-  //         hostEmail: "rahul.verma@gmail.com",
-  //         hostPhone: "+91 99887 66554",
-  //         hostPlace: "Mumbai",
-  //         requestStatus: "rejected"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=56",
-  //         hostName: "Sneha Nair",
-  //         hostEmail: "sneha.nair@gmail.com",
-  //         hostPhone: "+91 94466 77889",
-  //         hostPlace: "Thrissur",
-  //         requestStatus: "approved"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=67",
-  //         hostName: "Daniel Thomas",
-  //         hostEmail: "daniel.thomas@gmail.com",
-  //         hostPhone: "+91 90012 33445",
-  //         hostPlace: "Ernakulam",
-  //         requestStatus: "pending"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=5",
-  //         hostName: "Ananya Pillai",
-  //         hostEmail: "ananya.pillai@gmail.com",
-  //         hostPhone: "+91 88990 11223",
-  //         hostPlace: "Trivandrum",
-  //         requestStatus: "approved"
-  //     },
-  //     {
-  //         hostPicture: "https://i.pravatar.cc/150?img=2",
-  //         hostName: "Karthik R",
-  //         hostEmail: "karthik.r@gmail.com",
-  //         hostPhone: "+91 90123 45678",
-  //         hostPlace: "Coimbatore",
-  //         requestStatus: "pending"
-  //     }
-  // ];
 
   return (
     <div className="mt-5 rounded-xl bg-[#171717] text-white">
@@ -100,9 +33,9 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
 
       <div className="border-b">
         <ul className="px-5">
-          {partnerList.map((partner) => (
+          {vehicles.map((v) => (
             <li
-              key={partner.id}
+              key={v.id}
               className="my-8 grid grid-cols-6 gap-x-2 items-center text-sm"
             >
               <div className="flex gap-x-2 items-center">
@@ -110,18 +43,18 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
                   <img
                     className="rounded-full w-full h-full object-cover"
                     src={'https://i.pravatar.cc/150?img=12'}
-                    alt={partner.firstname}
+                    alt={v.firstname}
                   />
                 </div>
-                <h6 className="text-sm font-semibold">{`${partner.firstname}  ${partner.lastname == null ? '' : partner.lastname}`}</h6>
+                <h6 className="text-sm font-semibold">{`${v.firstname}  ${v.lastname == null ? '' : v.lastname}`}</h6>
               </div>
 
               <div>
-                <span>{partner.email}</span>
+                <span>{v.email}</span>
               </div>
 
               <div>
-                <span>{partner.phone}</span>
+                <span>{v.phone}</span>
               </div>
 
               <div>
@@ -129,11 +62,11 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
               </div>
 
               <div>
-                {partner.id == 'pending' ? (
+                {v.id == 'pending' ? (
                   <span className="rounded-full px-2 py-1 bg-amber-200 text-sm text-yellow-800 font-semibold">
                     Pending
                   </span>
-                ) : partner.id == 'cancelled' ? (
+                ) : v.id == 'cancelled' ? (
                   <span className="rounded-full px-2 py-1 bg-red-200 text-sm text-red-800 font-semibold">
                     Cancelled
                   </span>
@@ -146,7 +79,7 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
 
               <div className="flex gap-x-2">
                 <Link
-                  to={`/partners/${partner.id}`}
+                  to={`/partners/${v.id}`}
                   className="p-2 text-lg hover:bg-zinc-600 hover:font-semibold rounded"
                 >
                   <BiPencil />
@@ -176,4 +109,4 @@ const PartnerTable = ({ partnerList }: { partnerList: PartnerType[] }) => {
   );
 };
 
-export default PartnerTable;
+export default VehicleTable;

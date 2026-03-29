@@ -1,0 +1,55 @@
+{
+  "name": "4W",
+  "brands": [
+    {
+      "name": "Maruti",
+      "models": [
+        {
+          "name": "S-Presso",
+          "bodyType": "HATCHBACK",
+          "fuelType": "PETROL",
+          "seats": 4,
+          "variants": ["LXI", "VXI", "VXI+"]
+        }
+      ]
+    },
+    {
+      "name": "Hyundai",
+      "models": [
+        {
+          "name": "i20",
+          "bodyType": "HATCHBACK",
+          "fuelType": "PETROL",
+          "seats": 5,
+          "variants": ["Magna", "Sportz", "Asta"]
+        },
+        {
+          "name": "Creta",
+          "bodyType": "SUV",
+          "fuelType": "PETROL",
+          "seats": 5,
+          "variants": ["E", "EX", "SX", "SX(O)"]
+        }
+      ]
+    },
+    {
+      "name": "Tata",
+      "models": [
+        {
+          "name": "Nexon",
+          "bodyType": "SUV",
+          "fuelType": "PETROL",
+          "seats": 5,
+          "variants": ["XE", "XM", "XZ", "XZ+"]
+        },
+        {
+          "name": "Tiago",
+          "bodyType": "HATCHBACK",
+          "fuelType": "PETROL",
+          "seats": 5,
+          "variants": ["XE", "XM", "XT", "XZ"]
+        }
+      ]
+    }
+  ]
+}

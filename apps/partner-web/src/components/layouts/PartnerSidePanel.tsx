@@ -5,8 +5,7 @@ import { GoGear, GoSearch } from 'react-icons/go';
 import { SlOptionsVertical } from 'react-icons/sl';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
-import { Car, Users } from 'lucide-react';
-import { BiBuildings } from 'react-icons/bi';
+import { Car } from 'lucide-react';
 // import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
 
 interface NavLinks {
@@ -15,7 +14,11 @@ interface NavLinks {
   pathIcon: ReactElement;
 }
 
-const AdminSidePanel = ({ isSidePanelOpen }: { isSidePanelOpen: boolean }) => {
+const PartnerSidePanel = ({
+  isSidePanelOpen,
+}: {
+  isSidePanelOpen: boolean;
+}) => {
   const navigate = useNavigate();
   // const isSmallScreen = useIsSmallScreen();
   const navLinks: NavLinks[] = [
@@ -28,16 +31,6 @@ const AdminSidePanel = ({ isSidePanelOpen }: { isSidePanelOpen: boolean }) => {
       path: '/analytics',
       pathName: 'Analytics',
       pathIcon: <TbBrandGoogleAnalytics className="w-5 h-5" />,
-    },
-    {
-      path: '/manage-partners',
-      pathName: 'Manage Partners',
-      pathIcon: <Users className="w-5 h-5" />,
-    },
-    {
-      path: '/manage-companies',
-      pathName: 'Manage Companies',
-      pathIcon: <BiBuildings className="w-5 h-5" />,
     },
     {
       path: '/manage-vehicles',
@@ -138,4 +131,4 @@ const AdminSidePanel = ({ isSidePanelOpen }: { isSidePanelOpen: boolean }) => {
   );
 };
 
-export default AdminSidePanel;
+export default PartnerSidePanel;

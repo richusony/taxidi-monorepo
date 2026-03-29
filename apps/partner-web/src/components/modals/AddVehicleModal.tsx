@@ -73,7 +73,7 @@ const AddPartnerModal = ({ onClose }: Props) => {
       <div className="w-full max-w-lg rounded-2xl border border-neutral-800 bg-neutral-950 p-8 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-white">Add Partner</h2>
+          <h2 className="text-xl font-semibold text-white">Add Vehicle</h2>
 
           <button
             onClick={onClose}
