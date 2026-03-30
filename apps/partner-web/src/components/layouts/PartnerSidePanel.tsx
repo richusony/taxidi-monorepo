@@ -97,7 +97,7 @@ const PartnerSidePanel = ({
               key={idx + nl.pathName}
               role="button"
               onClick={() => navigate(nl.path)}
-              className={`"transition-all ease-linear w-full px-2 py-2 flex ${isSidePanelOpen ? '' : 'justify-center'} items-center gap-x-2 hover:bg-[#262626] rounded-md`}
+              className={`"transition-all mt-2 ease-linear w-full px-2 py-2 flex ${isSidePanelOpen ? '' : 'justify-center'} items-center gap-x-2 hover:bg-[#262626] rounded-md`}
             >
               {nl.pathIcon}
               <Link
