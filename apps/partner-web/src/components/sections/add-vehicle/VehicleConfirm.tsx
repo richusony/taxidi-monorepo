@@ -40,6 +40,7 @@ const VehicleConfirm = () => {
               headerIcon={<Book className="w-5 h-5 text-amber-500" />}
             />
             <NormalRow keyName="Body Color" value={data.bodyColor} />
+            <NormalRow keyName="Plate Number" value={data.numberPlate} />
             <NormalRow
               keyName="Mileage"
               value={data.mileage?.toString() + ' km'}
