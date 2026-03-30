@@ -35,7 +35,7 @@ const VehicleListPage = () => {
   if (isLoading) return <TaxidiLoader loadingText="Loading Vehicles..." />;
 
   return (
-    <section className="p-5 bg-black rounded-b-xl min-h-screen text-white">
+    <section className="p-5 bg-black rounded-b-xl min-h-screen min-w-[80%] md:min-w-full overflow-x-auto hide-scrollbar text-white">
       {openModal && <AddPartnerModal onClose={toggleAddVehicleModal} />}
 
       <div className="flex justify-between items-center text-white">
