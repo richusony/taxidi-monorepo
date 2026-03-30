@@ -13,7 +13,7 @@ const PartnerLayout = () => {
       <PartnerSidePanel isSidePanelOpen={isSidePanelOpen} />
 
       <div
-        className={`transition-all ease-linear w-full lg:w-[80%] p-3 max-h-screen overflow-y-auto`}
+        className={`transition-all ease-linear w-full ${isSidePanelOpen ? 'lg:w-[80%]': 'lg:w-full'} p-3 max-h-screen overflow-y-auto`}
       >
         <DashboardHeader sidePanelToggle={sidePanelToggle} />
         <main>

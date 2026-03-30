@@ -39,14 +39,32 @@ const PartnerSidePanel = ({
     },
   ];
 
-  // const smallScreenStyle = `${isSidePanelOpen? "absolute" : "w-0 hidden"}`;
+  const bottomNavLinks = [
+    {
+      path: '/settings',
+      pathName: 'Settings',
+      pathIcon: <GoGear className="w-5 h-5" />,
+    },
+    {
+      path: '//help',
+      pathName: 'Help',
+      pathIcon: <MdInfoOutline className="w-5 h-5" />,
+    },
+    {
+      path: '/search',
+      pathName: 'Search',
+      pathIcon: <GoSearch className="w-5 h-5" />,
+    },
+  ];
+
+  const dynamicStyle = `${isSidePanelOpen ? 'lg:w-[20%] pl-5' : 'lg:w-[4%] text-center '}`;
   return (
     <aside
-      className={`transition-all ease-linear absolute md:static min-h-screen lg:w-[20%] pl-5 py-4 flex flex-col justify-between bg-[#171717] text-white`}
+      className={`transition-all ease-linear absolute md:static min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
     >
       <div>
-        <Link to={'/'} className="text-xl font-bold">
-          Taxidi {isSidePanelOpen}
+        <Link to={'/'} className="text-xl font-bold text-center">
+          {isSidePanelOpen ? 'Taxidi' : 'T'}
         </Link>
 
         <nav className="mt-4">
@@ -56,10 +74,13 @@ const PartnerSidePanel = ({
                 role="button"
                 onClick={() => navigate(link.path)}
                 key={link.pathName}
-                className="my-2 transition-all ease-linear w-full px-2 py-2 flex items-center gap-x-2 hover:bg-[#262626] rounded-md"
+                className={`my-2 transition-all ease-linear w-full px-2 py-2 flex ${isSidePanelOpen ? '' : 'justify-center'} items-center gap-x-2 hover:bg-[#262626] rounded-md`}
               >
                 {link.pathIcon}
-                <Link className="cursor-default" to={link.path}>
+                <Link
+                  className={`${isSidePanelOpen ? 'block' : 'hidden'} cursor-default`}
+                  to={link.path}
+                >
                   {link.pathName}
                 </Link>
               </li>
@@ -71,36 +92,22 @@ const PartnerSidePanel = ({
       {/* Bottom Section */}
       <div className="">
         <ul>
-          <li
-            role="button"
-            onClick={() => navigate('/settings')}
-            className="transition-all ease-linear w-full px-2 py-2 flex items-center gap-x-2 hover:bg-[#262626] rounded-md"
-          >
-            <GoGear className="w-5 h-5" />
-            <Link className="cursor-default" to={'/settings'}>
-              Settings
-            </Link>
-          </li>
-          <li
-            role="button"
-            onClick={() => navigate('/help')}
-            className="transition-all ease-linear w-full px-2 py-2 flex items-center gap-x-2 hover:bg-[#262626] rounded-md"
-          >
-            <MdInfoOutline className="w-5 h-5" />
-            <Link className="cursor-default" to={'/help'}>
-              Get Help
-            </Link>
-          </li>
-          <li
-            role="button"
-            onClick={() => navigate('/search')}
-            className="transition-all ease-linear w-full px-2 py-2 flex items-center gap-x-2 hover:bg-[#262626] rounded-md"
-          >
-            <GoSearch className="w-5 h-5" />
-            <Link className="cursor-default" to={'/search'}>
-              Search
-            </Link>
-          </li>
+          {bottomNavLinks.map((nl, idx) => (
+            <li
+              key={idx + nl.pathName}
+              role="button"
+              onClick={() => navigate(nl.path)}
+              className={`"transition-all ease-linear w-full px-2 py-2 flex ${isSidePanelOpen ? '' : 'justify-center'} items-center gap-x-2 hover:bg-[#262626] rounded-md`}
+            >
+              {nl.pathIcon}
+              <Link
+                className={`${isSidePanelOpen ? 'block' : 'hidden'} cursor-default`}
+                to={'/settings'}
+              >
+                {nl.pathName}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         <div className="mt-4">
@@ -114,13 +121,13 @@ const PartnerSidePanel = ({
                 />
               </div>
 
-              <div>
+              <div className={isSidePanelOpen?'': 'hidden'}>
                 <h6>Sam Alex</h6>
                 <p className="text-gray-500 text-sm">sam@gmail.com</p>
               </div>
             </div>
             <div>
-              <p>
+              <p className={isSidePanelOpen?'': 'hidden'}>
                 <SlOptionsVertical />
               </p>
             </div>
