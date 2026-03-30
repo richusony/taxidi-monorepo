@@ -6,7 +6,7 @@ const ProgressTracking = ({
   currentStep: number;
 }) => {
   return (
-    <section className="mt-10 mb-5 md:min-w-96 overflow-x-scroll hide-scrollbar">
+    <section className="mt-10 mb-5 w-full overflow-x-scroll hide-scrollbar">
       {/* main container */}
       <div className="flex">
         {/* step */}
