@@ -6,7 +6,7 @@ const DashboardHeader = ({
   sidePanelToggle: () => void;
 }) => {
   return (
-    <header className="border-b-2 border-b-[#171717] px-5 py-3 bg-black rounded-t-xl text-white">
+    <header className="sticky top-0 z-50 w-full border-b-2 border-b-[#171717] px-5 py-3 bg-black rounded-t-xl text-white">
       <div className="flex items-center gap-x-5">
         <div className="w-fit border-r-2 border-r-[#171717] pr-5">
           <BsLayoutSidebar
