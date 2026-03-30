@@ -5,8 +5,7 @@ import { GoGear, GoSearch } from 'react-icons/go';
 import { SlOptionsVertical } from 'react-icons/sl';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
-import { Car } from 'lucide-react';
-// import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
+import { ArrowLeftFromLine, Car } from 'lucide-react';
 
 interface NavLinks {
   path: string;
@@ -16,11 +15,12 @@ interface NavLinks {
 
 const PartnerSidePanel = ({
   isSidePanelOpen,
+  sidePanelToggle
 }: {
   isSidePanelOpen: boolean;
+sidePanelToggle: () => void
 }) => {
   const navigate = useNavigate();
-  // const isSmallScreen = useIsSmallScreen();
   const navLinks: NavLinks[] = [
     {
       path: '/',
@@ -60,12 +60,15 @@ const PartnerSidePanel = ({
   const dynamicStyle = `${isSidePanelOpen ? 'lg:w-[20%] pl-5' : 'lg:w-[4%] text-center '}`;
   return (
     <aside
-      className={`transition-all ease-linear absolute md:static min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
+      className={`transition-all ease-linear ${ isSidePanelOpen &&'absolute z-10' } md:static min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
     >
       <div>
-        <Link to={'/'} className="text-xl font-bold text-center">
+        <div className={isSidePanelOpen?'flex justify-between':''}>
+          <Link to={'/'} className="text-xl font-bold text-center">
           {isSidePanelOpen ? 'Taxidi' : 'T'}
         </Link>
+        {isSidePanelOpen && <ArrowLeftFromLine onClick={sidePanelToggle} className='mr-4 w-5 h-5 md:hidden text-white/80' />}
+        </div>
 
         <nav className="mt-4">
           <ul className="">

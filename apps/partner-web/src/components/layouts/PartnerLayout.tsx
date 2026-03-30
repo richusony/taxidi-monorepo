@@ -10,10 +10,10 @@ const PartnerLayout = () => {
 
   return (
     <div className="flex min-h-screen">
-      <PartnerSidePanel isSidePanelOpen={isSidePanelOpen} />
+      <PartnerSidePanel isSidePanelOpen={isSidePanelOpen} sidePanelToggle={sidePanelToggle} />
 
       <div
-        className={`transition-all ease-linear w-full ${isSidePanelOpen ? 'lg:w-[80%]': 'lg:w-full'} p-3 max-h-screen overflow-y-auto`}
+        className={`transition-all ease-linear w-full ${isSidePanelOpen ? 'lg:w-[80%]': 'lg:w-full'} py-2 px-1  md:p-3 max-h-screen overflow-y-auto`}
       >
         <DashboardHeader sidePanelToggle={sidePanelToggle} />
         <main>
