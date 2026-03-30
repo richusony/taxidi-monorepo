@@ -9,16 +9,19 @@ const PartnerLayout = () => {
   const sidePanelToggle = () => setIsSidePanelOpen((prev) => !prev);
 
   return (
-    <div className="flex min-h-screen">
-      <PartnerSidePanel isSidePanelOpen={isSidePanelOpen} sidePanelToggle={sidePanelToggle} />
+    <div className="flex">
+      <PartnerSidePanel
+        isSidePanelOpen={isSidePanelOpen}
+        sidePanelToggle={sidePanelToggle}
+      />
 
-      <div
-        className={`transition-all ease-linear w-full ${isSidePanelOpen ? 'lg:w-[80%]': 'lg:w-full'} py-2 px-1  md:p-3 max-h-screen overflow-y-auto`}
-      >
+      <div className={`max-h-screen ${isSidePanelOpen ? 'lg:w-[95%]' : 'lg:w-full'} overflow-hidden py-3 px-2`}>
         <DashboardHeader sidePanelToggle={sidePanelToggle} />
-        <main>
-          <Outlet />
-        </main>
+        <div className={`transition-all rounded-b-xl bg-black ease-linear max-h-[93%] overflow-y-auto hide-scrollbar`}>
+          <main>
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );

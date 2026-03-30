@@ -60,7 +60,7 @@ sidePanelToggle: () => void
   const dynamicStyle = `${isSidePanelOpen ? 'lg:w-[20%] pl-5' : 'lg:w-[4%] text-center '}`;
   return (
     <aside
-      className={`transition-all ease-linear ${ isSidePanelOpen &&'absolute z-10' } md:static min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
+      className={`transition-all ease-linear ${ isSidePanelOpen ? 'absolute md:static z-10': '' } min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
     >
       <div>
         <div className={isSidePanelOpen?'flex justify-between':''}>

@@ -199,7 +199,7 @@ const AddVehiclePage = () => {
   ];
 
   return (
-    <section className="bg-black min-h-screen py-5 px-8 text-white">
+    <section className="py-5 px-8 text-white">
       <h1 className="mt-1 text-2xl font-semibold">List a New Vehicle</h1>
       <p className="mt-1 text-sm text-white/50">
         Complete the steps below to add your vehicle to the platform.
