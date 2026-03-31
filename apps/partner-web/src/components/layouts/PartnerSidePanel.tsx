@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import type { ReactElement } from 'react';
+import { useEffect, type ReactElement } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import { GoGear, GoSearch } from 'react-icons/go';
 import { SlOptionsVertical } from 'react-icons/sl';
@@ -15,10 +15,10 @@ interface NavLinks {
 
 const PartnerSidePanel = ({
   isSidePanelOpen,
-  sidePanelToggle
+  sidePanelToggle,
 }: {
   isSidePanelOpen: boolean;
-sidePanelToggle: () => void
+  sidePanelToggle: () => void;
 }) => {
   const navigate = useNavigate();
   const navLinks: NavLinks[] = [
@@ -57,17 +57,37 @@ sidePanelToggle: () => void
     },
   ];
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        sidePanelToggle();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const dynamicStyle = `${isSidePanelOpen ? 'lg:w-[20%] pl-5' : 'lg:w-[4%] text-center '}`;
   return (
     <aside
-      className={`transition-all ease-linear ${ isSidePanelOpen ? 'absolute md:static z-10': '' } min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
+      className={`transition-all ease-linear ${isSidePanelOpen ? 'absolute md:static z-10' : ''} min-h-screen ${dynamicStyle} py-4 flex flex-col justify-between bg-[#171717] text-white`}
     >
       <div>
-        <div className={isSidePanelOpen?'flex justify-between':''}>
+        <div className={isSidePanelOpen ? 'flex justify-between' : ''}>
           <Link to={'/'} className="text-xl font-bold text-center">
-          {isSidePanelOpen ? 'Taxidi' : 'T'}
-        </Link>
-        {isSidePanelOpen && <ArrowLeftFromLine onClick={sidePanelToggle} className='mr-4 w-5 h-5 md:hidden text-white/80' />}
+            {isSidePanelOpen ? 'Taxidi' : 'T'}
+          </Link>
+          {isSidePanelOpen && (
+            <ArrowLeftFromLine
+              onClick={sidePanelToggle}
+              className="mr-4 w-5 h-5 md:hidden text-white/80"
+            />
+          )}
         </div>
 
         <nav className="mt-4">
@@ -124,13 +144,13 @@ sidePanelToggle: () => void
                 />
               </div>
 
-              <div className={isSidePanelOpen?'': 'hidden'}>
+              <div className={isSidePanelOpen ? '' : 'hidden'}>
                 <h6>Sam Alex</h6>
                 <p className="text-gray-500 text-sm">sam@gmail.com</p>
               </div>
             </div>
             <div>
-              <p className={isSidePanelOpen?'': 'hidden'}>
+              <p className={isSidePanelOpen ? '' : 'hidden'}>
                 <SlOptionsVertical />
               </p>
             </div>
