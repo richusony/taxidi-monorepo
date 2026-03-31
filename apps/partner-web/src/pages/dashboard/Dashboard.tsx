@@ -2,7 +2,7 @@ import DashboardCard from '@/components/helpers/DashboardCard';
 
 const Dashboard = () => {
   return (
-    <section className="w-full rounded-b-xl text-white">
+    <section className="w-full min-h-screen rounded-b-xl text-white">
       <div className="px-2 md:px-0 pt-5 flex flex-wrap items-center justify-center gap-5">
         <DashboardCard
           heading="Total Revenue"
